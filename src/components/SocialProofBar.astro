@@ -1,0 +1,69 @@
+---
+import { content } from '../data/content';
+const points = content.socialProof.points;
+---
+
+<section class="social-proof">
+  <div class="container">
+    <ul class="proof-row">
+      {points.map(p => (
+        <li class="proof-item">
+          <svg class="proof-tick" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>{p.title}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .social-proof {
+    background: var(--white);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: var(--space-md) 0;
+  }
+
+  .proof-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md) var(--space-2xl);
+  }
+
+  .proof-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+
+  .proof-tick {
+    color: var(--champagne);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    .proof-row {
+      gap: var(--space-sm) var(--space-lg);
+    }
+    .proof-item {
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .social-proof {
+      padding: var(--space-lg) 0;
+    }
+    .proof-item {
+      font-size: 0.9375rem;
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import BeforeAfterGallery from '../components/BeforeAfterGallery';
+import VideoShortsCarousel from '../components/VideoShortsCarousel';
+import ProcedureDetails from '../components/ProcedureDetails.astro';
+import SurgeonBio from '../components/SurgeonBio.astro';
+import Amenities from '../components/Amenities.astro';
+import ConsultationForm from '../components/ConsultationForm';
+// import ClinicGallery from '../components/ClinicGallery'; // Temporarily disabled — re-enable later
+import ReviewsCarousel from '../components/ReviewsCarousel';
+import FAQ from '../components/FAQ';
+import Footer from '../components/Footer.astro';
+import CarePackage from '../components/CarePackage.astro';
+import PatientJourney from '../components/PatientJourney.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import MobileCTABar from '../components/MobileCTABar.astro';
+import ConsultationModal from '../components/ConsultationModal';
+import SectionSkeleton from '../components/SectionSkeleton.astro';
+
+import { patientCases } from '../data/beforeAfter';
+import { reviews } from '../data/reviews';
+import { faqItems } from '../data/faq';
+import { videoTestimonials } from '../data/videoTestimonials';
+import { content } from '../data/content';
+---
+
+<Layout>
+  <Header />
+
+  <main>
+    <Hero />
+    <SurgeonBio />
+
+    <div class="island-with-skeleton">
+      <SectionSkeleton variant="carousel" />
+      <BeforeAfterGallery cases={patientCases} client:visible={{ rootMargin: "300px" }} />
+    </div>
+
+    <div class="island-with-skeleton">
+      <SectionSkeleton variant="carousel" />
+      <VideoShortsCarousel testimonials={videoTestimonials} client:visible={{ rootMargin: "200px" }} />
+    </div>
+
+    <div class="island-with-skeleton">
+      <SectionSkeleton variant="reviews" />
+      <ReviewsCarousel reviews={reviews} client:visible={{ rootMargin: "200px" }} />
+    </div>
+
+    <ProcedureDetails />
+    <CarePackage />
+
+    <div class="island-with-skeleton">
+      <SectionSkeleton variant="form" />
+      <ConsultationForm client:visible={{ rootMargin: "200px" }} />
+    </div>
+
+    <Amenities />
+
+    {/* Clinic gallery temporarily disabled — re-enable later. Component + content.clinicGallery kept intact. */}
+    {/*
+    <div class="island-with-skeleton">
+      <SectionSkeleton variant="gallery" />
+      <ClinicGallery client:visible={{ rootMargin: "100px" }} />
+    </div>
+    */}
+
+    <PatientJourney />
+
+    <div class="island-with-skeleton">
+      <SectionSkeleton variant="accordion" />
+      <FAQ items={faqItems} client:visible={{ rootMargin: "100px" }} />
+    </div>
+
+    <div class="mobile-only-form island-with-skeleton">
+      <SectionSkeleton variant="form" />
+      <ConsultationForm
+        client:visible
+        id="consultation-bottom"
+        title={content.form.minimalTitle}
+        ctaText={content.form.minimalCta}
+        minimal={true}
+      />
+    </div>
+  </main>
+
+  <Footer />
+  <WhatsAppButton />
+  <MobileCTABar />
+  <ConsultationModal client:idle />
+</Layout>
+
+<style>
+  .mobile-only-form {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .mobile-only-form {
+      display: block;
+    }
+  }
+</style>

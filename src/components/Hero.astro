@@ -1,0 +1,228 @@
+---
+import { content } from '../data/content';
+import { asset } from '../data/asset';
+const { hero } = content;
+---
+
+<section class="hero" id="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <h1 class="hero-headline">
+        <span class="hero-headline-lead">{hero.headlineStart}</span>
+        <em class="hero-headline-accent">{hero.headlineHighlight}</em>
+        {hero.headlineEnd && <span class="hero-headline-end">{hero.headlineEnd}</span>}
+      </h1>
+
+      {hero.subcopy && <p class="hero-sub">{hero.subcopy}</p>}
+
+      <ul class="hero-features">
+        {hero.features.map(feat => (
+          <li>{feat}</li>
+        ))}
+      </ul>
+
+      <div class="hero-cta">
+        <a href="#consultation" class="btn btn-primary btn-lg" data-open-form-modal>
+          {hero.ctaButton}
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img
+        src={asset('/images/celal-hero.webp')}
+        srcset={`${asset('/images/celal-hero-mobile.webp')} 720w, ${asset('/images/celal-hero.webp')} 1280w`}
+        sizes="(max-width: 768px) 720px, 600px"
+        alt={hero.imageAlt}
+        width="1280"
+        height="1600"
+        loading="eager"
+        fetchpriority="high"
+      />
+      {hero.imageName && (
+        <span class="hero-credit">
+          {hero.imageName}
+          {hero.imageRole && <span class="hero-credit-role">{hero.imageRole}</span>}
+        </span>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--cream);
+    padding: calc(var(--header-height) + var(--space-2xl)) 0 var(--space-3xl);
+    overflow: hidden;
+  }
+
+  /* Mobile-first: content first (h1 → features → CTA), image last. */
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .hero-content {
+    text-align: left;
+  }
+
+  .hero-headline {
+    color: var(--ink);
+    margin-bottom: var(--space-xl);
+  }
+
+  .hero-headline-lead {
+    display: block;
+  }
+
+  /* Accent line on its own row, brand champagne (not literal "white"). */
+  .hero-headline-accent {
+    display: block;
+    margin-top: 0.12em;
+    font-style: normal;
+    font-weight: 400;
+    color: var(--champagne-dark);
+  }
+
+  .hero-headline-end {
+    display: block;
+  }
+
+  /* Aspirational subcopy under the H1 — subordinate to the headline. */
+  .hero-sub {
+    max-width: 46ch;
+    margin-bottom: var(--space-xl);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* Trust checklist — vertical, champagne check marks (replaces old dot chips). */
+  .hero-features {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+  }
+
+  .hero-features li {
+    position: relative;
+    padding-left: 28px;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .hero-features li::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0.28em;
+    width: 6px;
+    height: 11px;
+    border: solid var(--champagne-dark);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+  }
+
+  .hero-image {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .hero-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Soft scrim so the name stays legible over any image. */
+  .hero-image::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 52%;
+    background: linear-gradient(to top, rgba(23, 21, 15, 0.68), rgba(23, 21, 15, 0));
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Editorial name label (celebrity/model leverage) — visual layer only, not in alt. */
+  .hero-credit {
+    position: absolute;
+    left: var(--space-lg);
+    bottom: var(--space-lg);
+    z-index: 2;
+    font-family: var(--font-heading);
+    font-size: 1.625rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    color: var(--cream);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+  }
+
+  /* Small "known for" descriptor under the name. */
+  .hero-credit-role {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--champagne);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    margin-top: 4px;
+  }
+
+  /* Champagne accent rule above the name to draw the eye. */
+  .hero-credit::before {
+    content: '';
+    display: block;
+    width: 34px;
+    height: 2px;
+    margin-bottom: var(--space-xs);
+    background: var(--champagne);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  @media (min-width: 768px) {
+    .hero {
+      padding: calc(var(--header-height) + var(--space-3xl)) 0 var(--space-4xl);
+    }
+
+    /* Desktop: two columns — content left, image right (source order preserved). */
+    .hero-inner {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: var(--space-3xl);
+    }
+
+    .hero-image {
+      max-height: 600px;
+    }
+
+    .hero-image img {
+      aspect-ratio: auto;
+      max-height: 600px;
+    }
+
+    .hero-credit {
+      font-size: 1.875rem;
+    }
+  }
+</style>

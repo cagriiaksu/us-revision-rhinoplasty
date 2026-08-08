@@ -1,0 +1,36 @@
+/* Swiper theme overrides — design system tokens */
+
+.swiper {
+  overflow-x: clip;
+  overflow-y: visible;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.swiper.swiper-initialized {
+  opacity: 1;
+}
+
+.swiper-pagination {
+  position: static !important;
+  margin-top: var(--space-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.swiper-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gray-200);
+  display: inline-block;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.swiper-bullet--active {
+  background: var(--champagne);
+  transform: scale(1.2);
+}

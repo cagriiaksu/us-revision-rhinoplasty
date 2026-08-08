@@ -1,0 +1,58 @@
+---
+interface Props {
+  variant: 'carousel' | 'form' | 'reviews' | 'gallery' | 'accordion';
+}
+
+const { variant } = Astro.props;
+---
+
+<div class="skeleton-fallback skeleton-wrapper">
+  <div class="container">
+    <div class="skeleton-heading skeleton-pulse"></div>
+    <div class="skeleton-subheading skeleton-pulse"></div>
+
+    {variant === 'carousel' && (
+      <div class="skeleton-cards">
+        <div class="skeleton-card skeleton-pulse"></div>
+        <div class="skeleton-card skeleton-pulse"></div>
+        <div class="skeleton-card skeleton-pulse"></div>
+      </div>
+    )}
+
+    {variant === 'reviews' && (
+      <div class="skeleton-review-row">
+        <div class="skeleton-review-card skeleton-pulse"></div>
+        <div class="skeleton-review-card skeleton-pulse"></div>
+        <div class="skeleton-review-card skeleton-pulse"></div>
+      </div>
+    )}
+
+    {variant === 'form' && (
+      <div class="skeleton-form-fields">
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-textarea skeleton-pulse"></div>
+        <div class="skeleton-btn skeleton-pulse"></div>
+      </div>
+    )}
+
+    {variant === 'gallery' && (
+      <div class="skeleton-cards">
+        <div class="skeleton-card skeleton-pulse"></div>
+        <div class="skeleton-card skeleton-pulse"></div>
+        <div class="skeleton-card skeleton-pulse"></div>
+      </div>
+    )}
+
+    {variant === 'accordion' && (
+      <div class="skeleton-form-fields">
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-input skeleton-pulse"></div>
+        <div class="skeleton-input skeleton-pulse"></div>
+      </div>
+    )}
+  </div>
+</div>

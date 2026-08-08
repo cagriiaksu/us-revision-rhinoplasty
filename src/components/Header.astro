@@ -1,0 +1,248 @@
+---
+import { content } from '../data/content';
+const { header } = content;
+---
+
+<header class="header" id="header">
+  <div class="container header-inner">
+    <a href="#hero" class="logo" aria-label="Dr. Celal Alioglu">
+      <span class="logo-wordmark">Dr. Celal Alioglu</span>
+    </a>
+
+    <input type="checkbox" id="nav-toggle" class="nav-toggle sr-only" aria-hidden="true" />
+    <label for="nav-toggle" class="nav-toggle-label" aria-label="Toggle navigation">
+      <span class="hamburger"></span>
+    </label>
+
+    <nav class="nav" aria-label="Main navigation">
+      <ul class="nav-list">
+        {header.navLinks.map(link => (
+          <li><a href={link.href} class="nav-link">{link.label}</a></li>
+        ))}
+        <li class="nav-cta-item">
+          <a href="#consultation" class="btn btn-primary btn-sm" data-open-form-modal>{header.ctaButton}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(250, 247, 242, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    height: var(--header-height);
+    transition: background var(--transition-base);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    color: var(--ink);
+    z-index: 1001;
+  }
+
+  .logo-wordmark {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+  }
+
+  /* Hamburger */
+  .nav-toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 10000;
+  }
+
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: all var(--transition-base);
+  }
+
+  .hamburger {
+    position: relative;
+  }
+
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .hamburger::before { top: -7px; }
+  .hamburger::after { top: 7px; }
+
+  /* Nav toggle states */
+  .nav-toggle:checked ~ .nav-toggle-label .hamburger {
+    background: transparent;
+  }
+
+  .nav-toggle:checked ~ .nav-toggle-label .hamburger::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .nav-toggle:checked ~ .nav-toggle-label .hamburger::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  /* Mobile Nav */
+  .nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    background: var(--cream);
+    padding: calc(var(--header-height) + var(--space-xl)) var(--space-xl) var(--space-xl);
+    transition: right var(--transition-slow);
+    overflow-y: auto;
+    z-index: 9999;
+  }
+
+  .nav-toggle:checked ~ .nav {
+    right: 0;
+    box-shadow: -10px 0 40px rgba(38, 35, 31, 0.12);
+  }
+
+  .nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .nav-link {
+    display: block;
+    padding: var(--space-md) 0;
+    color: var(--ink);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-link:hover {
+    color: var(--champagne-dark);
+  }
+
+  .nav-cta-item {
+    margin-top: var(--space-md);
+  }
+
+  .nav-cta-item .btn {
+    width: 100%;
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .nav-toggle-label {
+      display: none;
+    }
+
+    .nav {
+      position: static;
+      width: auto;
+      max-width: none;
+      height: auto;
+      background: transparent;
+      padding: 0;
+      overflow: visible;
+    }
+
+    .nav-list {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-xl);
+    }
+
+    .nav-link {
+      padding: var(--space-sm) 0;
+      font-size: 0.9375rem;
+      border-bottom: none;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--champagne);
+      transition: width var(--transition-base);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta-item {
+      margin-top: 0;
+      margin-left: var(--space-sm);
+    }
+
+    .nav-cta-item .btn {
+      width: auto;
+    }
+  }
+</style>
+
+<script>
+  import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock';
+
+  const navToggle = document.getElementById('nav-toggle') as HTMLInputElement | null;
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link, .nav-cta-item .btn');
+
+  const applyLock = () => {
+    if (!navToggle) return;
+    if (navToggle.checked) lockBodyScroll();
+    else unlockBodyScroll();
+  };
+
+  if (navToggle) {
+    navToggle.addEventListener('change', applyLock);
+  }
+
+  if (navToggle && navLinks.length) {
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (navToggle.checked) {
+          navToggle.checked = false;
+          applyLock();
+        }
+      });
+    });
+  }
+</script>

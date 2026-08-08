@@ -1,0 +1,282 @@
+---
+// CarePackage.astro — Package comparison as a single 3-column table, fully responsive
+// Columns : "What you get" (feature) · "With Dr Atif" (dark cocoa band, TR flag) · "UK clinics" (UK flag)
+// Mobile  : narrow tick columns (66px), header shows the short "Dr Atif" label
+// Tablet  : wider columns (150px), centred table, full "With Dr Atif" label
+// Desktop : widest columns (172px), larger type, table capped at 760px
+//
+// The "With Dr Atif" column is a continuous dark band — every row is ticked (champagne circle).
+// The "UK clinics" column is ticked (soft champagne) only where the clinic standard covers it,
+// otherwise a muted ✕. Flags sit stacked above each column title (inline SVG — no asset needed).
+//
+// Content (eyebrow, title, column labels, rows, note, CTA) comes from content.ts `packageCompare`.
+// A row is ticked in the UK column when `uk === true`; otherwise it renders a ✕.
+import { content } from '../data/content';
+const { packageCompare: pkg } = content;
+---
+
+<section class="package inclusions section section-alt" id="packages">
+  <div class="container">
+    <div class="pkg-head">
+      <span class="eyebrow">{pkg.eyebrow}</span>
+      <h2 class="pkg-title">{pkg.sectionTitle}</h2>
+    </div>
+
+    <div class="pkg-table">
+      <!-- Header row -->
+      <div class="pkg-row pkg-row--head">
+        <div class="pkg-cell pkg-cell--feature">
+          <span class="pkg-headlabel">What you get</span>
+        </div>
+        <div class="pkg-cell pkg-cell--ours">
+          <span class="flag" role="img" aria-label={pkg.flagOursLabel}>
+            <svg viewBox="0 0 60 40" preserveAspectRatio="none" aria-hidden="true">
+              <rect width="60" height="40" fill="#E30A17"/>
+              <circle cx="26" cy="20" r="9.5" fill="#fff"/>
+              <circle cx="29.6" cy="20" r="7.6" fill="#E30A17"/>
+              <path d="M41 15 L42.2 18.3 L45.8 18.4 L43 20.7 L43.9 24 L41 22.1 L38.1 24 L39 20.7 L36.2 18.4 L39.8 18.3 Z" fill="#fff"/>
+            </svg>
+          </span>
+          <span class="pkg-colname">
+            <span class="pkg-colname-full">{pkg.colOurs}</span>
+            <span class="pkg-colname-short">{pkg.colOursShort}</span>
+          </span>
+        </div>
+        <div class="pkg-cell pkg-cell--uk">
+          <span class="flag" role="img" aria-label={pkg.flagUKLabel}>
+            <svg viewBox="0 0 60 40" preserveAspectRatio="none" aria-hidden="true">
+              <rect width="60" height="40" fill="#B22234"/>
+              <rect y="3.08" width="60" height="3.08" fill="#fff"/>
+              <rect y="9.23" width="60" height="3.08" fill="#fff"/>
+              <rect y="15.38" width="60" height="3.08" fill="#fff"/>
+              <rect y="21.54" width="60" height="3.08" fill="#fff"/>
+              <rect y="27.69" width="60" height="3.08" fill="#fff"/>
+              <rect y="33.85" width="60" height="3.08" fill="#fff"/>
+              <rect width="24" height="21.54" fill="#3C3B6E"/>
+            </svg>
+          </span>
+          <span class="pkg-colname">{pkg.colUK}</span>
+        </div>
+      </div>
+
+      <!-- Data rows -->
+      {pkg.rows.map((row) => (
+        <div class="pkg-row">
+          <div class="pkg-cell pkg-cell--feature">
+            <span class="pkg-feature">{row.feature}</span>
+          </div>
+          <div class="pkg-cell pkg-cell--ours">
+            {row.ours ? (
+              <span class="pkg-mark pkg-mark--check">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            ) : (
+              <span class="pkg-mark pkg-mark--cross">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </span>
+            )}
+          </div>
+          <div class="pkg-cell pkg-cell--uk">
+            {row.uk === true ? (
+              <span class="pkg-mark pkg-mark--check-soft">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            ) : (
+              <span class="pkg-mark pkg-mark--cross">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="pkg-note">{pkg.note}</p>
+
+    <div class="pkg-cta-wrap">
+      <a href="#consultation" class="btn btn-primary btn-lg" data-open-form-modal>{pkg.ctaButton}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---- Head ---- */
+  .pkg-head { text-align: center; margin-bottom: 22px; }
+  .pkg-head .eyebrow { display: block; margin-bottom: 9px; }
+  .pkg-title {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-weight: 500;
+    font-size: 1.5625rem; /* 25px */
+    line-height: 1.16;
+    letter-spacing: -0.01em;
+    color: var(--ink, #26231f);
+    margin: 0;
+  }
+
+  /* ---- Table ---- */
+  .pkg-table {
+    background: var(--white, #fff);
+    border: 1px solid var(--line, #e4dccf);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm, 0 1px 2px rgba(38, 35, 31, 0.05));
+  }
+
+  .pkg-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 66px 66px;
+    align-items: stretch;
+  }
+  .pkg-row:not(.pkg-row--head) { border-top: 1px solid #f0e9dd; }
+
+  .pkg-cell { display: flex; align-items: center; }
+  .pkg-cell--feature { padding: 13px 14px; }
+  .pkg-cell--ours,
+  .pkg-cell--uk { justify-content: center; padding: 11px 4px; }
+  .pkg-cell--ours { background: var(--cocoa, #473829); }
+  .pkg-cell--uk { border-left: 1px solid #ece3d6; }
+
+  /* ---- Header cells (flag stacked over column title) ---- */
+  .pkg-row--head .pkg-cell--feature { align-items: flex-end; padding: 14px 14px 12px; }
+  .pkg-row--head .pkg-cell--ours,
+  .pkg-row--head .pkg-cell--uk {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 13px 4px;
+    text-align: center;
+  }
+
+  .pkg-headlabel {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 0.59375rem; /* ~9.5px */
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint, #a89a86);
+  }
+
+  /* ---- Flags ---- */
+  .flag {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 21px;
+    height: 14px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .flag svg { width: 100%; height: 100%; display: block; }
+  .pkg-cell--ours .flag { box-shadow: 0 0 0 1px rgba(250, 247, 242, 0.22); }
+  .pkg-cell--uk .flag { box-shadow: 0 0 0 1px rgba(38, 35, 31, 0.12); }
+
+  /* ---- Column titles ---- */
+  .pkg-colname {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 0.78125rem; /* 12.5px */
+    font-weight: 500;
+    line-height: 1.15;
+  }
+  .pkg-cell--ours .pkg-colname { color: var(--cream, #faf7f2); }
+  .pkg-cell--uk .pkg-colname { color: var(--ink-soft, #6e655b); }
+  .pkg-colname-full { display: none; }
+  .pkg-colname-short { display: inline; }
+
+  /* ---- Feature text ---- */
+  .pkg-feature {
+    font-family: var(--font-body, 'Inter', sans-serif);
+    font-size: 0.78125rem; /* 12.5px */
+    line-height: 1.35;
+    color: var(--ink, #26231f);
+  }
+
+  /* ---- Marks ---- */
+  .pkg-mark {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .pkg-mark svg { width: 10px; height: 10px; display: block; }
+  .pkg-mark--check      { background: var(--champagne, #b6925f); color: var(--ink, #26231f); }
+  .pkg-mark--check-soft { background: var(--champagne, #b6925f); color: var(--ink, #26231f); }
+  .pkg-mark--cross      { background: #a86b5f; color: #fff; }
+
+  /* ---- Closing line + CTA ---- */
+  .pkg-note {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-style: italic;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.5;
+    color: var(--ink, #26231f);
+    text-align: center;
+    max-width: 540px;
+    margin: 22px auto 18px;
+  }
+  .pkg-cta-wrap { text-align: center; }
+  .inclusions .btn-lg { width: 100%; } /* full-width on mobile */
+
+  /* =========================================================
+     TABLET — ≥ 768px : wider columns, full "With Dr Atif" label
+     ========================================================= */
+  @media (min-width: 768px) {
+    .pkg-head { margin-bottom: 30px; }
+    .pkg-head .eyebrow { margin-bottom: 10px; }
+    .pkg-title { font-size: 1.875rem; line-height: 1.12; max-width: 460px; margin-inline: auto; }
+
+    .pkg-table { border-radius: 14px; max-width: 720px; margin-inline: auto; }
+
+    .pkg-row { grid-template-columns: minmax(0, 1fr) 150px 150px; }
+
+    .pkg-cell--feature { padding: 16px 22px; }
+    .pkg-cell--ours,
+    .pkg-cell--uk { padding: 14px; }
+    .pkg-row--head .pkg-cell--feature { padding: 20px 22px; }
+    .pkg-row--head .pkg-cell--ours,
+    .pkg-row--head .pkg-cell--uk { padding: 20px 14px; }
+
+    .pkg-headlabel { font-size: 0.65625rem; letter-spacing: 0.1em; } /* 10.5px */
+    .flag { width: 24px; height: 16px; margin-bottom: 8px; }
+    .pkg-colname { font-size: 0.9375rem; } /* 15px */
+    .pkg-colname-full { display: inline; }
+    .pkg-colname-short { display: none; }
+    .pkg-feature { font-size: 0.84375rem; } /* 13.5px */
+
+    .pkg-mark { width: 23px; height: 23px; }
+    .pkg-mark svg { width: 12px; height: 12px; }
+
+    .pkg-note { font-size: 0.9375rem; max-width: 440px; margin: 26px auto 20px; }
+    .inclusions .btn-lg { width: auto; }
+  }
+
+  /* =========================================================
+     DESKTOP — ≥ 1024px : widest columns, larger type
+     ========================================================= */
+  @media (min-width: 1024px) {
+    .pkg-head { margin-bottom: 36px; }
+    .pkg-head .eyebrow { margin-bottom: 12px; }
+    .pkg-title { font-size: 2.25rem; line-height: 1.12; max-width: 560px; }
+
+    .pkg-table { max-width: 760px; }
+
+    .pkg-row { grid-template-columns: minmax(0, 1fr) 172px 172px; }
+
+    .pkg-cell--feature { padding: 17px 24px; }
+    .pkg-cell--ours,
+    .pkg-cell--uk { padding: 15px; }
+    .pkg-row--head .pkg-cell--feature { padding: 22px 24px; }
+    .pkg-row--head .pkg-cell--ours,
+    .pkg-row--head .pkg-cell--uk { padding: 22px 16px; }
+
+    .pkg-headlabel { font-size: 0.6875rem; } /* 11px */
+    .flag { width: 26px; height: 17px; margin-bottom: 9px; }
+    .pkg-colname { font-size: 1rem; } /* 16px */
+    .pkg-feature { font-size: 0.90625rem; } /* 14.5px */
+
+    .pkg-mark { width: 24px; height: 24px; }
+
+    .pkg-note { font-size: 1rem; max-width: 540px; margin: 30px auto 22px; }
+  }
+</style>

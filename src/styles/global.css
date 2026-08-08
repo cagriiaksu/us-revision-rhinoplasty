@@ -1,0 +1,468 @@
+/* ========================================
+   Dr Atif Cezairlioglu — UK Facial Surgery LP
+   Editorial luxury design system
+   (ivory / charcoal / champagne · soft rose)
+   ======================================== */
+
+/* --- CSS Custom Properties --- */
+:root {
+  /* Editorial palette */
+  --cream: #faf7f2;        /* page background (ivory / off-white) */
+  --cream-2: #f3ede3;      /* alt section background */
+  --sand: #ece3d6;         /* warm card / accent surface */
+  --ink: #26231f;          /* charcoal text */
+  --ink-soft: #6e655b;     /* muted body text */
+  --black: #17150f;        /* near-black accent / dark sections */
+  --champagne: #b6925f;    /* champagne accent */
+  --champagne-soft: #d8c2a1;
+  --champagne-dark: #9c7c4d;
+  --rose: #cda9a1;         /* soft rose highlight */
+  --rose-soft: #e7d4ce;
+  --line: #e4dccf;         /* hairline borders */
+  --white: #ffffff;
+
+  /* Package-section aliases (resolve to the palette above) */
+  --champagne-light: var(--champagne-soft); /* package badge — gold bg   */
+  --ink-mute: var(--gray-500);              /* package badge — ghost text */
+  --champagne-muted: var(--gray-400);       /* package — UK dash mark     */
+  --ink-faint: #a89a86;                     /* package — muted UK feature */
+  --cocoa: #473829;                         /* package — "With Dr Atif" column band */
+
+  /* Warm neutral scale (names kept for legacy refs, retuned to warm tones) */
+  --gray-50: #faf7f2;
+  --gray-100: #f1ebe1;
+  --gray-200: #e5dccd;
+  --gray-400: #c2b6a4;
+  --gray-500: #8a8074;
+  --gray-600: #6e655b;
+  --gray-700: #4f4840;
+  --gray-800: #38332c;
+  --gray-900: #26231f;
+
+  --whatsapp: #25d366;
+  --whatsapp-dark: #128c7e;
+  --red: #c0492f;
+
+  /* Typography — --font-heading / --font-body are set by Astro Fonts API */
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+
+  /* Sizing */
+  --container-max: 1180px;
+  --container-narrow: 760px;
+  --header-height: 76px;
+
+  /* Border radius — softened, smaller, more editorial */
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --radius-full: 9999px;
+
+  /* Shadows — lighter, warmer, less heavy */
+  --shadow-sm: 0 1px 2px rgba(38, 35, 31, 0.05);
+  --shadow-md: 0 6px 18px rgba(38, 35, 31, 0.06);
+  --shadow-lg: 0 14px 38px rgba(38, 35, 31, 0.08);
+  --shadow-xl: 0 24px 60px rgba(38, 35, 31, 0.10);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* --- Reset --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: var(--header-height);
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background-color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* --- Keyboard focus (visible for keyboard users, hidden for mouse) --- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--champagne-dark);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* --- Typography — lighter, more editorial --- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(2.25rem, 5.2vw, 3.6rem); font-weight: 500; }
+h2 { font-size: clamp(1.75rem, 4vw, 2.65rem); }
+h3 { font-size: clamp(1.25rem, 3vw, 1.7rem); }
+h4 { font-size: clamp(1.0625rem, 2.5vw, 1.3rem); }
+
+p {
+  font-size: clamp(1rem, 1.4vw, 1.0625rem);
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+/* Editorial eyebrow / kicker label */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--champagne-dark);
+}
+
+/* --- Layout Utilities --- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.section {
+  padding: var(--space-3xl) 0;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: var(--space-4xl) 0;
+  }
+}
+
+.section-alt {
+  background: var(--cream-2);
+}
+
+/* --- Section Titles --- */
+.section-title {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+}
+
+.section-title .eyebrow {
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.section-title h2 {
+  margin-bottom: var(--space-sm);
+  position: relative;
+  display: inline-block;
+}
+
+.section-title p {
+  max-width: 560px;
+  margin: var(--space-sm) auto 0;
+}
+
+/* --- Buttons — flatter, refined, smaller radius --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 15px 30px;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base), transform var(--transition-fast);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--cream);
+  box-shadow: none;
+}
+
+.btn-primary:hover {
+  background: var(--black);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.btn-secondary:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* Champagne accent button (use sparingly) */
+.btn-accent {
+  background: var(--champagne);
+  color: var(--white);
+}
+
+.btn-accent:hover {
+  background: var(--champagne-dark);
+  transform: translateY(-1px);
+}
+
+.btn-whatsapp {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.btn-whatsapp:hover {
+  background: var(--black);
+  transform: translateY(-1px);
+}
+
+.btn-lg {
+  padding: 17px 38px;
+  font-size: 1rem;
+}
+
+.btn-sm {
+  padding: 11px 22px;
+  font-size: 0.8125rem;
+}
+
+/* --- Cards — cleaner, lighter, hairline border --- */
+.card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* --- Star Rating --- */
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--champagne);
+}
+
+.stars svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+/* --- Visually Hidden (Accessibility) --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Thin divider (was .gold-divider) --- */
+.gold-divider,
+.rule-divider {
+  width: 48px;
+  height: 1px;
+  background: var(--champagne);
+  border-radius: 0;
+}
+
+/* --- Skeleton Loaders --- */
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-pulse {
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-50) 50%, var(--gray-100) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+.skeleton-wrapper {
+  padding: var(--space-3xl) 0;
+}
+
+@media (min-width: 768px) {
+  .skeleton-wrapper {
+    padding: var(--space-4xl) 0;
+  }
+}
+
+.skeleton-heading {
+  height: 2rem;
+  width: 60%;
+  margin: 0 auto var(--space-sm);
+}
+
+.skeleton-subheading {
+  height: 1rem;
+  width: 40%;
+  margin: 0 auto var(--space-2xl);
+}
+
+.skeleton-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.skeleton-card {
+  height: 280px;
+}
+
+.skeleton-form-fields {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.skeleton-input {
+  height: 48px;
+}
+
+.skeleton-textarea {
+  height: 120px;
+}
+
+.skeleton-btn {
+  height: 52px;
+  width: 200px;
+  margin: var(--space-md) auto 0;
+}
+
+.skeleton-review-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.skeleton-review-card {
+  height: 200px;
+}
+
+@media (max-width: 767px) {
+  .skeleton-cards,
+  .skeleton-review-row {
+    grid-template-columns: 1fr;
+  }
+  .skeleton-card {
+    height: 200px;
+  }
+}
+
+/* Hide skeleton once React island renders its <section> */
+.island-with-skeleton:has(section) > .skeleton-fallback {
+  display: none;
+}
+
+/* Content Visibility (React islands — applied before JS loads) */
+.ba-section,
+.reviews-section,
+.form-section,
+.vt-section,
+.clinic-section,
+.faq-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
+}
+
+/* --- Mobile Button Fixes --- */
+@media (max-width: 767px) {
+  .btn {
+    white-space: normal;
+    padding: 13px 24px;
+  }
+  .btn-lg {
+    padding: 15px 28px;
+    font-size: 0.9375rem;
+  }
+}

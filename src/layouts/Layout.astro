@@ -1,0 +1,111 @@
+---
+import { Font } from 'astro:assets';
+import { faqItems } from '../data/faq';
+import { content } from '../data/content';
+import { asset } from '../data/asset';
+import '../styles/global.css';
+import '../styles/swiper-theme.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = content.meta.title,
+  description = content.meta.description,
+} = Astro.props;
+
+// Served from the /us/revision-rhinoplasty-in-turkey/ subfolder: canonical is the
+// base URL on the production domain (site + base from astro.config), and asset()
+// keeps the OG image pointing inside the subfolder. Still noindex until launch-ready.
+const canonicalURL = new URL(import.meta.env.BASE_URL, Astro.site).href;
+const ogImage = new URL(asset('/images/celal-og.webp'), Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Analytics: no GTM / Google Ads container on-page yet. Add the Dr Celal
+         container before launch (kept off the demo draft on purpose). -->
+
+    <meta name="color-scheme" content="light" />
+    <meta name="description" content={description} />
+    <!-- Demo draft: keep noindex until a real domain + approved content exist. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Fonts (managed by Astro Fonts API) -->
+    <Font cssVariable="--font-heading" preload />
+    <Font cssVariable="--font-body" preload />
+
+    <!-- Preload Hero Image (LCP) -->
+    <link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      href={asset('/images/celal-hero.webp')}
+      imagesrcset={`${asset('/images/celal-hero-mobile.webp')} 720w, ${asset('/images/celal-hero.webp')} 1280w`}
+      imagesizes="(max-width: 768px) 720px, 1280px"
+    />
+
+    <!-- DNS Prefetch (geo lookup for phone input) -->
+    <link rel="dns-prefetch" href="https://ipapi.co" />
+
+    <!-- Favicon (Dr Celal Alioglu monogram — placeholder until real favicon generated) -->
+    <link rel="icon" type="image/x-icon" href={asset('/favicon.ico')} sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/svg+xml" href={asset('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={asset('/apple-touch-icon.png')} />
+
+    <!-- Open Graph -->
+    <!-- TODO: replace celal-og.webp placeholder with a real 1200x630 OG asset. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Dr Celal Alioglu" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/webp" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <title>{title}</title>
+
+    <!-- Structured Data: Physician (general/verified info only — no unverified
+         credentials, no aggregate rating). TODO: confirm details before launch. -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Physician",
+      "name": "Dr Celal Alioglu",
+      "medicalSpecialty": "PlasticSurgery",
+      "areaServed": "US",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Istanbul",
+        "addressCountry": "TR"
+      }
+    })} />
+
+    <!-- Structured Data: FAQPage (generated from on-page FAQ content) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(item => ({
+        "@type": "Question",
+        "name": item.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.answer,
+        },
+      })),
+    })} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

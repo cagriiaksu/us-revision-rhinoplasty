@@ -1,0 +1,242 @@
+---
+import { content } from '../data/content';
+import { asset } from '../data/asset';
+const { surgeonBio } = content;
+---
+
+<section class="surgeon section section-alt" id="surgeon">
+  <div class="container">
+    <div class="section-title">
+      <span class="eyebrow">{surgeonBio.eyebrow}</span>
+      <h2>{surgeonBio.name}</h2>
+      <p class="surgeon-title">{surgeonBio.title}</p>
+    </div>
+
+    <div class="surgeon-content">
+      <div class="surgeon-image">
+        <img
+          src={asset('/images/celal-surgeon.webp')}
+          alt={surgeonBio.imageAlt}
+          class="surgeon-photo"
+          width="1000"
+          height="1250"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <div class="surgeon-detail">
+        <div class="surgeon-credentials">
+          <span class="surgeon-credentials-title">{surgeonBio.credentialsTitle}</span>
+          <ul class="surgeon-credentials-list">
+            {surgeonBio.credentials.map(c => (
+              <li class="surgeon-credential" title={c.name}>
+                <span class="surgeon-credential-icon" aria-hidden="true">
+                  <img src={c.logo} alt="" width="40" height="40" loading="lazy" decoding="async" />
+                </span>
+                <span class="surgeon-credential-text">
+                  <span class="surgeon-credential-abbr">{c.abbr}</span>
+                  <span class="surgeon-credential-name">{c.name}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="surgeon-bio">
+          {surgeonBio.bio.map(p => (
+            <p>{p}</p>
+          ))}
+        </div>
+
+        <blockquote class="surgeon-quote">
+          <p>{surgeonBio.quote}</p>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .surgeon {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 800px;
+  }
+
+  /* Single, centred column — title matches the global .section-title pattern */
+  .surgeon-content {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  /* Text column (credentials + bio + quote) — keeps the same 32px rhythm the
+     children had as direct flex items, so mobile/tablet stays visually identical. */
+  .surgeon-detail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .surgeon-image {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .surgeon-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .surgeon-title {
+    font-size: 0.9375rem;
+    color: var(--champagne-dark);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .surgeon-bio {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .surgeon-bio p {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .surgeon-quote {
+    border-left: 2px solid var(--champagne);
+    padding-left: var(--space-lg);
+  }
+
+  .surgeon-quote p {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* Accreditations & memberships — trust signals */
+  .surgeon-credentials {
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--line);
+  }
+
+  .surgeon-credentials-title {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--champagne-dark);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
+  }
+
+  .surgeon-credentials-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+
+  .surgeon-credential {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  /* Uniform logo tile — every accreditation logo sits in the same 44×44 box and
+     scales to fit (object-fit: contain), so mixed aspect ratios all look equal. */
+  .surgeon-credential-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: var(--white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-md);
+  }
+
+  .surgeon-credential-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .surgeon-credential-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+
+  .surgeon-credential-abbr {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+
+  .surgeon-credential-name {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 600px) {
+    .surgeon-credentials-list {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+  }
+
+  /* Desktop: editorial 2-column split (portrait left, text right) — matches the
+     Hero / ProcedureDetails pattern and fills the container instead of a lone
+     640px centred column. Mobile & tablet (<1024px) are unaffected. */
+  @media (min-width: 1024px) {
+    .surgeon-content {
+      max-width: none;
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      column-gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    .surgeon-image {
+      max-width: none;
+      margin: 0;
+    }
+
+    /* Lead with the narrative, close with the trust block (its border-top
+       hairline becomes a natural footer divider). */
+    .surgeon-bio {
+      order: 1;
+    }
+
+    .surgeon-quote {
+      order: 2;
+    }
+
+    .surgeon-credentials {
+      order: 3;
+    }
+  }
+</style>
