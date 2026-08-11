@@ -1,12 +1,21 @@
 ---
 import { content } from '../data/content';
+import { asset } from '../data/asset';
 const { header } = content;
 ---
 
 <header class="header" id="header">
   <div class="container header-inner">
-    <a href="#hero" class="logo" aria-label="Dr. Celal Alioglu">
-      <span class="logo-wordmark">Dr. Celal Alioglu</span>
+    <a href="#hero" class="logo">
+      {/* Ink variant — the header sits on cream. The source lockup is white,
+          so logo-cream.svg is the one for the dark footer. */}
+      <img
+        src={asset('/images/logo-ink.svg')}
+        alt={header.logoAlt}
+        class="logo-img"
+        width="4030"
+        height="1071"
+      />
     </a>
 
     <input type="checkbox" id="nav-toggle" class="nav-toggle sr-only" aria-hidden="true" />
@@ -56,13 +65,12 @@ const { header } = content;
     z-index: 1001;
   }
 
-  .logo-wordmark {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--ink);
-    letter-spacing: 0.01em;
-    white-space: nowrap;
+  /* Intrinsic 4030 × 1071 is declared on the element so the box is reserved
+     before the SVG loads; CSS drives the rendered size. */
+  .logo-img {
+    display: block;
+    height: 36px;
+    width: auto;
   }
 
   /* Hamburger */

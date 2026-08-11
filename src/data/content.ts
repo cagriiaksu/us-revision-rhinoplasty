@@ -69,14 +69,16 @@ export const content = {
 
   // ─── Hero ────────────────────────────────────────────────────────
   hero: {
-    headlineStart: "A second chance at the nose you were hoping for.",
+    headlineStart: "A second chance at the nose you hoped for.",
     headlineHighlight: "Revision Rhinoplasty in Turkey",
     headlineEnd: "",
+    // Kept deliberately plain: this audience has been oversold once, so the
+    // promise stays bounded by "realistic" and "what your nose can safely achieve".
     subcopy:
-      "If a previous rhinoplasty left you unhappy — with your breathing, your symmetry, or the way it looks — Dr. Celal Alioglu focuses on careful, realistic correction, planned honestly around what your nose can safely achieve.",
+      "Unhappy with a previous rhinoplasty — your breathing, your symmetry, or how it looks? Dr. Celal Alioglu plans careful, realistic correction around what your nose can safely achieve.",
     features: [
-      "Revision (secondary) rhinoplasty focus",
-      "European Board certified · ISAPS & ASPS member",
+      "Revision (secondary) rhinoplasty expert",
+      "ASPS & ISAPS member · European Board certified",
       "15+ years focused on facial aesthetics",
       "Every procedure performed personally by Dr. Celal",
     ],
@@ -114,17 +116,22 @@ export const content = {
     imageAlt: "Dr. Celal Alioglu, board-certified plastic surgeon, in his Istanbul clinic",
     credentialsTitle: "Certifications & accreditations",
     // Verified memberships/certification (source: clinic's own AU rhinoplasty page).
+    // ASPS leads: it is the body a US reader recognizes on sight, so it carries
+    // more trust here than EBOPRAS. Rendered in array order by SurgeonBio.astro.
     credentials: [
-      { abbr: "European Board", name: "European Board of Plastic, Reconstructive & Aesthetic Surgery", logo: asset("/images/ebopras.webp") },
       { abbr: "ASPS", name: "American Society of Plastic Surgeons", logo: asset("/images/asps-logo.webp") },
+      { abbr: "European Board", name: "European Board of Plastic, Reconstructive & Aesthetic Surgery", logo: asset("/images/ebopras.webp") },
       { abbr: "ISAPS", name: "International Society of Aesthetic Plastic Surgery", logo: asset("/images/isaps-logo.webp") },
     ],
   },
 
   // ─── Patient Results Gallery (rhinoplasty before/after) ──────────
-  // Verified rhinoplasty result images supplied by the clinic (ported from the
-  // AU rhinoplasty page). TODO before launch: confirm written patient consent,
-  // and prefer revision-specific cases where available.
+  // Current result set supplied by the clinic: 8 side-by-side before|after
+  // composites at 1800 × 1600 (9:8), converted from public/before afterlar/N.png.
+  // These replaced the 10 images ported from the AU page — do not reuse those.
+  // Card geometry matches 9:8 exactly, so nothing is cropped; see
+  // .ba-image-wrapper in BeforeAfterGallery.tsx.
+  // TODO before launch: confirm written patient consent for each case.
   beforeAfter: {
     eyebrow: "Patient results",
     sectionTitle: "Before & after",
@@ -136,16 +143,14 @@ export const content = {
     ctaButton: "Request more results",
     postOpLabel: "",
     cases: [
-      { image: asset("/images/celal-ba-01.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-02.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-03.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-04.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-05.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-06.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-07.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-08.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-09.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
-      { image: asset("/images/celal-ba-10.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "Post-op result" },
+      { image: asset("/images/celal-ba-01.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-02.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-03.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-04.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-05.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-06.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-07.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
+      { image: asset("/images/celal-ba-08.webp"), alt: "Rhinoplasty before and after — patient of Dr. Celal Alioglu", caption: "", location: "", timeframe: "" },
     ] as PatientCase[],
   },
 
@@ -160,6 +165,9 @@ export const content = {
       "Short, honest reflections on the experience — from first consultation to recovery.",
     brandedThumbnails: false,
     items: [
+      { youtubeId: "e3gKOQ7buc0", patientName: "William", location: "Manchester, United Kingdom", procedure: "Patient story", thumbnail: asset("/images/vt-william.webp") },
+      { youtubeId: "3acHAyTIdJ4", patientName: "Patrese", location: "Melbourne, Australia", procedure: "Patient story", thumbnail: asset("/images/vt-patrese.webp") },
+      { youtubeId: "IZ1ODHzu77Y", patientName: "Gjyljeta", location: "Bern, Switzerland", procedure: "Patient story", thumbnail: asset("/images/vt-gjyljeta.webp") },
       { youtubeId: "cNuPTZ6C5ow", patientName: "Katherine", location: "Oregon, USA", procedure: "Patient story", thumbnail: asset("/images/vt-katherine.webp") },
       { youtubeId: "V3VNGiSTz4A", patientName: "Alison", location: "Melbourne, Australia", procedure: "Patient story", thumbnail: asset("/images/vt-alison.webp") },
       { youtubeId: "Q_ABNUDxO_c", patientName: "Phoebe", location: "Melbourne, Australia", procedure: "Patient story", thumbnail: asset("/images/vt-phoebe.webp") },
@@ -169,10 +177,17 @@ export const content = {
   },
 
   // ─── Reviews Carousel ────────────────────────────────────────────
-  // Verified reviews reproduced VERBATIM. Only rhinoplasty / procedure-neutral
-  // reviews are shown here (the clinic's other verified reviews describe face/neck
-  // procedures and were intentionally excluded from a rhinoplasty page).
-  // TODO before launch: source additional revision-rhinoplasty-specific reviews.
+  // Full verified review set ported from the clinic's own Dr. Celal AU rhinoplasty
+  // page (src/data/reviews.ts there) — all 23 entries, plus "Billy Jean" which only
+  // existed on this page. Text is reproduced as published, localized to en-US
+  // spelling only ("travelled" → "traveled", "organised" → "organized"); no wording,
+  // claims or ratings were changed. `location` is set only where the review text
+  // itself states where the patient traveled from — never inferred.
+  // Ordering is localized for this page: revision-rhinoplasty and US-patient
+  // reviews lead, then the long-form reviews, then primary-rhinoplasty cases.
+  // NB: the source page lists some patients twice under different platforms
+  // (Angelina Stapley/Hiimangelina, StephanieGan77/Steph Ganowski) — kept as-is.
+  // TODO before launch: confirm review consent with the clinic.
   reviews: {
     eyebrow: "What patients say",
     sectionTitle: "Patient reviews",
@@ -184,8 +199,34 @@ export const content = {
     ctaButton: "Start your journey",
     emptyText: "Patient reviews will appear here once published.",
     items: [
+      // ── Revision (secondary) rhinoplasty — lead the carousel on this page ──
       {
-        name: "Australian Patient",
+        name: "Katie",
+        rating: 5,
+        text: "I am five weeks post-op from revision rhinoplasty with Dr. Celal Alioglu and I couldn't be happier. My nose looks beautiful, my breathing is better, and the entire experience was smooth and well organized.",
+      },
+      {
+        name: "Angelina Stapley",
+        location: "United States",
+        rating: 5,
+        text: "My experience with Dr. Celal Alioglu was truly exceptional. I traveled from the United States for revision rhinoplasty and breast augmentation, and my nose is now straighter, more symmetrical, and much easier to breathe through.",
+      },
+      {
+        name: "Hiimangelina",
+        location: "United States",
+        rating: 5,
+        text: "I traveled from the United States for revision rhinoplasty and breast augmentation. My nose is now straighter, more symmetrical, and I could breathe clearly almost immediately after surgery.",
+      },
+      {
+        name: "Katya Malashevich",
+        rating: 5,
+        text: "My rhinoplasty with Dr. Celal Alioglu was a life-changing experience. He listened carefully, explained what needed to be corrected, and delivered a natural-looking result that improved both my appearance and breathing.",
+      },
+
+      // ── Long-form reviews already published on this page ──
+      {
+        name: "Samantha Boyland",
+        location: "Australia",
         rating: 5,
         text: "I flew from Australia to see Dr. Celal. After viewing many doctors online I thought what a great fit?! I went for rhinoplasty and breast lift and implants. The consultation was great. Though I left a little disappointed after he said I did not need implants, and I really wanted them. I trusted his expertise and we went ahead with the rhinoplasty and lift. My nose is absolutely perfect and now my breasts have settled, I see why he talked me out of implants, not just for the fullness, but the heavy lifting that lifts them out of that. I would recommend everyone to Celal. It's not about a 'one stop shop' but what works for you. I've been told by everyone that my nose looks like something that should have always been there and not a 'surgery nose' and the more my breasts heal the more I am happy I didn't bother with implants. The package I got included everything I needed and the response to any questions I had were answered quickly. Thanks again.",
       },
@@ -193,6 +234,101 @@ export const content = {
         name: "Billy Jean",
         rating: 5,
         text: "Turkey is saturated with plastic surgeons. It can be confusing to select the right surgeon for your specific needs. I started my research a year ago, followed surgeons on social media and realself, checked their qualifications, flew to Turkey for consultations. All the hard work paid off because I found Dr Celal!! His attention to detail and natural results speak for themselves.",
+      },
+
+      // ── Primary rhinoplasty — international patients ──
+      {
+        name: "Jennifer Bonnici",
+        location: "Australia",
+        rating: 5,
+        text: "I came from Australia and had rhinoplasty with Dr. Celal Alioglu. He exceeded my expectations and gave me the best rhinoplasty I could have asked for. His team was professional, reassuring, and easy to communicate with.",
+      },
+      {
+        name: "Soner Oruc",
+        location: "Sydney, Australia",
+        rating: 5,
+        text: "I traveled from Sydney, Australia to Istanbul for rhinoplasty with Dr. Celal. The hotel, transfers, consultation, and surgery were all well organized. My nose looks amazing, and I can breathe properly again.",
+      },
+      {
+        name: "Terrific6487",
+        location: "Australia",
+        rating: 5,
+        text: "I traveled from Australia to Istanbul for rhinoplasty and breast augmentation with Dr. Celal. I wanted subtle, natural changes to my nose, and I am already very happy with my results.",
+      },
+      {
+        name: "Natia Rasulova",
+        rating: 5,
+        text: "One year after my rhinoplasty with Dr. Celal, I am extremely happy with my result. My nose looks natural, suits my face, and I can breathe perfectly.",
+      },
+      {
+        name: "Maria Ivasyuk",
+        rating: 5,
+        text: "I am very happy with the result of my rhinoplasty with Dr. Celal and would recommend him to everyone.",
+      },
+      {
+        name: "Sociable482508",
+        rating: 5,
+        text: "I had my rhinoplasty with Dr. Celal Alioglu and I am extremely happy with the results. The surgery and recovery went smoothly, and my nose looks natural and balanced with my face.",
+      },
+      {
+        name: "Viktoriia16",
+        rating: 5,
+        text: "I am very grateful to Dr. Celal Alioglu for my beautiful rhinoplasty. My nose looks natural, harmonious, and perfectly suits my face. The hotel, transfers, and support were all very well organized.",
+      },
+      {
+        name: "StephanieGan77",
+        rating: 5,
+        text: "I had an excellent experience with Dr. Celal Alioglu and his team. My rhinoplasty already looks natural and balanced, with minimal bruising and very little pain during recovery.",
+      },
+      {
+        name: "Considerate104601",
+        rating: 5,
+        text: "I trusted Dr. Celal to alter my nose in a way that suited my face, and he did an amazing job. I am healing well and very happy with the result.",
+      },
+      {
+        name: "Tatiana",
+        rating: 5,
+        text: "I traveled to Istanbul for rhinoplasty and blepharoplasty with Dr. Celal Alioglu. My nose looks natural, harmonious, and fits my face beautifully. The team was professional, responsive, and supportive throughout the whole process.",
+      },
+      {
+        name: "EmzHeart",
+        rating: 5,
+        text: "I had rhinoplasty and upper blepharoplasty with Dr. Celal. I didn't want a completely different nose, only subtle corrections, and that is exactly what he delivered. The result looks natural and suits my face.",
+      },
+      {
+        name: "Steph Ganowski",
+        rating: 5,
+        text: "I had an excellent experience with Dr. Celal Alioglu and his team. One week after rhinoplasty, I was already shocked by how natural and balanced my nose looked.",
+      },
+      {
+        name: "Kelani",
+        rating: 5,
+        text: "My experience with Dr. Celal has been incredible. One month after surgery, I love my results. My nose looks natural, and his team was kind and responsive throughout the process.",
+      },
+      {
+        name: "Bethany",
+        rating: 5,
+        text: "I had rhinoplasty with Dr. Celal and the whole experience was smooth and professional. His team made me feel comfortable throughout the process, and I am very happy with my results.",
+      },
+      {
+        name: "Valeria Smirnova",
+        rating: 5,
+        text: "I had rhinoplasty with Dr. Celal Alioglu and I am extremely happy with the result. My nose looks natural, balanced, and perfectly suited to my face.",
+      },
+      {
+        name: "Majid",
+        rating: 5,
+        text: "I recently had rhinoplasty with Dr. Celal Alioglu, and it was one of the best decisions I have ever made. The result is both aesthetic and functional, and my breathing has improved dramatically.",
+      },
+      {
+        name: "Valeriya Misuna",
+        rating: 5,
+        text: "I had rhinoplasty for the tip of my nose. Dr. Celal was kind, professional, and reassuring. My nose is currently healing, but I can already see a smaller, thinner, and neater result.",
+      },
+      {
+        name: "Harris Ashraf",
+        rating: 5,
+        text: "Dr. Celal did a really good job with my rhinoplasty. I was nervous about the result, but he reassured me and delivered a natural result that was better than I expected.",
       },
     ] as Review[],
   },
@@ -209,8 +345,6 @@ export const content = {
         title: "Revision Rhinoplasty",
         tab: "Revision",
         subtitle: "Correcting previous surgery (secondary rhinoplasty)",
-        image: asset("/images/celal-ba-04.webp"),
-        alt: "Revision rhinoplasty — before and after, patient of Dr. Celal Alioglu",
         description:
           "Unhappy with a previous rhinoplasty? Dr. Celal performs revision (secondary) rhinoplasty to address breathing issues, asymmetry, or aesthetic concerns from prior procedures. Revision surgery is significantly more complex than primary rhinoplasty and demands deep expertise — Dr. Celal has corrected cases referred from clinics across Europe, Australia, and the Middle East.",
         info: [
@@ -225,8 +359,6 @@ export const content = {
         title: "Piezo Rhinoplasty",
         tab: "Piezo",
         subtitle: "Ultrasonic precision technique",
-        image: asset("/images/celal-ba-01.webp"),
-        alt: "Rhinoplasty result — patient of Dr. Celal Alioglu",
         description:
           "Piezo (ultrasonic) rhinoplasty uses high-frequency vibrations to reshape the nasal bones with millimeter precision — without damaging surrounding tissue. The result: less bruising, faster recovery, and refined contours that traditional techniques can't match. Dr. Celal personalizes every procedure to your facial proportions and breathing function.",
         info: [
@@ -416,7 +548,7 @@ export const content = {
       {
         question: "Is it safe to have rhinoplasty surgery abroad?",
         answer:
-          "Your surgery is performed at Medicana Hospital, a JCI-accredited hospital that meets recognized international standards for safety and quality. Dr. Celal Alioglu is European Board–certified (EBOPRAS) and a member of ISAPS and ASPS, reflecting a high level of surgical training and professional recognition. Many patients from the United States and around the world have been cared for through a structured journey with support before, during and after travel.",
+          "Your surgery is performed at Medicana Hospital, a JCI-accredited hospital that meets recognized international standards for safety and quality. Dr. Celal Alioglu is a member of the American Society of Plastic Surgeons (ASPS) and ISAPS, and is European Board–certified (EBOPRAS), reflecting a high level of surgical training and professional recognition. Many patients from the United States and around the world have been cared for through a structured journey with support before, during and after travel.",
       },
       {
         question: "Why is revision rhinoplasty more complex than a first-time procedure?",
@@ -454,7 +586,7 @@ export const content = {
   // ─── Footer ──────────────────────────────────────────────────────
   footer: {
     tagline:
-      "Revision and primary rhinoplasty in Istanbul with Dr. Celal Alioglu — European Board certified, ISAPS & ASPS member. Careful, natural-looking results and dedicated support for international patients.",
+      "Revision and primary rhinoplasty in Istanbul with Dr. Celal Alioglu — ASPS & ISAPS member, European Board certified. Careful, natural-looking results and dedicated support for international patients.",
     contactTitle: "Get in touch",
     // Verified clinic contact details (source: clinic's own AU rhinoplasty page).
     contact: {

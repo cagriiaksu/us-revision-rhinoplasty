@@ -298,15 +298,15 @@ export default function VideoShortsCarousel({ testimonials }: Props) {
                           decoding="async"
                           draggable={false}
                         />
-                        {!isDemo && (
-                          <span className="vt-play" aria-hidden="true">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                          </span>
-                        )}
+                        {/* No overlaid play glyph: every thumbnail already has
+                            the YouTube Shorts play mark baked in. The old chip
+                            was decorative only (pointer-events: none), so the
+                            tap/keyboard handlers on .vt-facade are untouched.
+                            The location line is baked into the artwork too, so
+                            only the procedure label is overlaid here. */}
                         {!vt.brandedThumbnails && (
                           <div className="vt-meta">
                             <span className="vt-proc">{item.procedure}</span>
-                            <span className="vt-loc">{item.location}</span>
                           </div>
                         )}
                       </div>
@@ -400,27 +400,6 @@ export default function VideoShortsCarousel({ testimonials }: Props) {
           font-size: 1rem;
           font-weight: 500;
           color: var(--cream);
-        }
-        .vt-loc {
-          font-size: 0.75rem;
-          color: rgba(250, 247, 242, 0.8);
-        }
-        .vt-play {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 2;
-          width: 56px;
-          height: 56px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-          background: rgba(250, 247, 242, 0.92);
-          color: var(--ink);
-          padding-left: 3px;
-          pointer-events: none;
         }
         /* Inline player — 9/16 matches the thumbnail (.vt-facade) so the card
            keeps the exact same size when a video starts playing. */

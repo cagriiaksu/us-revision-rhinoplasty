@@ -1,7 +1,8 @@
 ---
-// Tab-switcher procedure section — faithful to the Claude Code draft design
-// (narrow centred column, segmented tabs, visual-on-top panel, full-width CTA),
-// wired to content.ts, on-brand tokens, and a working modal CTA.
+// Tab-switcher procedure section — narrow centred column, segmented tabs and a
+// full-width CTA, wired to content.ts, on-brand tokens, and a working modal CTA.
+// Text-only panels: the per-procedure image was removed by request, so the panel
+// is a single column at every breakpoint (no image column to sit beside).
 import { content } from '../data/content';
 const { procedures: proc } = content;
 
@@ -39,7 +40,9 @@ const infoIcons = [
       </div>
     </div>
 
-    {/* Panels */}
+    {/* Panels — one at a time behind the tabs on mobile, all side by side from
+        tablet up (see the ≥768px block, where .proc-tabs is hidden). */}
+    <div class="proc-panels">
     {proc.items.map((p, i) => (
       <article
         class:list={["proc-panel", { active: i === 0 }]}
@@ -48,15 +51,6 @@ const infoIcons = [
         role="tabpanel"
         aria-labelledby={`proc-tab-${i}`}
       >
-        <div class="proc-visual">
-          <picture>
-            {(p as { imageMobile?: string }).imageMobile && (
-              <source media="(max-width: 767px)" srcset={(p as { imageMobile?: string }).imageMobile} />
-            )}
-            <img src={p.image} alt={p.alt} width="900" height="1125" loading="lazy" decoding="async" />
-          </picture>
-        </div>
-
         <div class="proc-body">
           <h3 class="proc-name">{p.title}</h3>
           <span class="proc-sub">{p.subtitle}</span>
@@ -80,6 +74,7 @@ const infoIcons = [
         </div>
       </article>
     ))}
+    </div>
 
     <div class="proc-cta-wrap">
       <a href="#consultation" class="btn btn-primary btn-lg" data-open-form-modal>{proc.ctaButton}</a>
@@ -167,46 +162,21 @@ const infoIcons = [
   }
 
   /* ---- Panel ---- */
+  /* Text-only panel — narrowed to the design-system reading column so the
+     description doesn't stretch to an uncomfortable measure without an image
+     column beside it. */
   .proc-panel {
     display: none;
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius-xl);
     overflow: hidden;
-    max-width: 920px;
+    max-width: var(--container-narrow);
     margin: 0 auto;
   }
 
   .proc-panel.active {
     display: block;
-  }
-
-  .proc-visual {
-    position: relative;
-    overflow: hidden;
-    background: var(--sand);
-    aspect-ratio: 4 / 3;
-  }
-
-  .proc-visual picture {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .proc-visual img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Fox Eye portrait (first card): on mobile the 4/3 crop cuts off the lower
-     subject, so shift the crop down to preserve the intended composition. */
-  @media (max-width: 767px) {
-    .proc-panel[data-panel="0"] .proc-visual img {
-      object-position: center 72%;
-    }
   }
 
   .proc-body {
@@ -336,19 +306,31 @@ const infoIcons = [
   }
 
   /* =========================================================
-     TABLET — ≥ 768px : two-column panel, specs as 2-col grid
+     TABLET — ≥ 768px : roomier panel, specs as 2-col grid
      ========================================================= */
   @media (min-width: 768px) {
     .proc-head { margin-bottom: var(--space-2xl); }
     .proc-title { font-size: 34px; }
 
-    .proc-panel {
-      display: none;
-      grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
-    }
-    .proc-panel.active { display: grid; }
+    /* Tabs are a mobile-only affordance. From tablet up there is room to show
+       every procedure at once, so the segmented control is hidden and each
+       panel is displayed regardless of the .active class the tab script
+       toggles — the script keeps running but has no visible effect here. */
+    .proc-tabs { display: none; }
 
-    .proc-visual { aspect-ratio: auto; min-height: 340px; }
+    .proc-panels {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .proc-panel,
+    .proc-panel.active {
+      display: block;
+      max-width: none;
+      margin: 0;
+    }
 
     .proc-body { padding: 30px 30px 28px; }
     .proc-name { font-size: 24px; }
@@ -381,22 +363,18 @@ const infoIcons = [
   }
 
   /* =========================================================
-     DESKTOP — ≥ 1024px : wider panel, larger type, 2-col points
+     DESKTOP — ≥ 1024px : larger type, 2-col points
      ========================================================= */
   @media (min-width: 1024px) {
-    .proc-panel { grid-template-columns: minmax(0, 42%) minmax(0, 1fr); }
-    .proc-visual { min-height: 420px; }
-    .proc-body { padding: 44px 44px 40px; }
-    .proc-name { font-size: 28px; line-height: 1.18; }
+    .proc-panels { gap: var(--space-xl); }
+
+    .proc-body { padding: 36px 34px 32px; }
+    .proc-name { font-size: 26px; line-height: 1.18; }
     .proc-desc { font-size: 15px; line-height: 1.75; margin-bottom: 26px; }
     .proc-spec-icon { width: 36px; height: 36px; }
     .proc-spec dd { font-size: 15px; }
-
-    .proc-points {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px 22px;
-    }
+    /* .proc-points stays single-column: side-by-side cards are ~480px of inner
+       width, too narrow to split the bullets into two readable columns. */
   }
 </style>
 

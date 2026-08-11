@@ -2,6 +2,11 @@
 dist/
 dist.zip
 *.zip
+
+# raw image masters (client-supplied PNG/JPEG originals). The optimised .webp
+# derivatives in public/images are committed and are what the site serves;
+# these are kept locally only so a source file can be re-encoded if needed.
+source-images/
 # generated types
 .astro/
 

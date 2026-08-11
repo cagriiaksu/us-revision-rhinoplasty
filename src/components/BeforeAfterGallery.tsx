@@ -148,6 +148,14 @@ export default function BeforeAfterGallery({ cases }: Props) {
         <Swiper
           modules={[Pagination]}
           {...defaultSwiperProps}
+          /* 2-up (not the shared 3-up) from tablet onwards: the cards are now
+             landscape 9:8 composites holding two faces side by side, so a third
+             column would shrink each face to ~180px and make the result
+             unreadable. Revert to defaultSwiperProps' breakpoints for 3-up. */
+          breakpoints={{
+            768: { slidesPerView: 2, spaceBetween: 16 },
+            1024: { slidesPerView: 2, spaceBetween: 24 },
+          }}
         >
           {cases.map((patient, i) => (
             <SwiperSlide key={i}>
@@ -156,13 +164,18 @@ export default function BeforeAfterGallery({ cases }: Props) {
                   <img
                     src={patient.image}
                     alt={patient.alt}
-                    width="900"
-                    height="1125"
+                    width="1800"
+                    height="1600"
                     loading="lazy"
                     decoding="async"
                   />
+                  {/* Every composite is split down the middle — pre-op on the
+                      left half, post-op on the right — so the pair of corner
+                      chips maps directly onto the two photos. */}
+                  <span className="ba-label ba-label--before">{t.labelBefore}</span>
+                  <span className="ba-label ba-label--after">{t.labelAfter}</span>
                   {patient.timeframe && (
-                    <span className="ba-label">{patient.timeframe}</span>
+                    <span className="ba-label ba-label--tf">{patient.timeframe}</span>
                   )}
                 </div>
                 {patient.caption && (
@@ -253,11 +266,14 @@ export default function BeforeAfterGallery({ cases }: Props) {
         .ba-section .swiper-slide {
           height: auto;
         }
+        /* 9 / 8 == 1800 × 1600, the dimensions the clinic supplies these
+           before|after composites at, so the pair is shown uncropped.
+           No max-height needed: a landscape card is always shorter than the
+           column is wide, so the cap could never bind. */
         .ba-image-wrapper {
           position: relative;
           overflow: hidden;
-          aspect-ratio: 4 / 5;
-          max-height: 560px;
+          aspect-ratio: 9 / 8;
         }
         .ba-image-wrapper img {
           display: block;
@@ -268,7 +284,6 @@ export default function BeforeAfterGallery({ cases }: Props) {
         .ba-label {
           position: absolute;
           top: 12px;
-          left: 12px;
           padding: 5px 12px;
           border-radius: var(--radius-sm);
           font-size: 0.6875rem;
@@ -280,6 +295,11 @@ export default function BeforeAfterGallery({ cases }: Props) {
           color: var(--cream);
           backdrop-filter: blur(2px);
         }
+        .ba-label--before { left: 12px; }
+        .ba-label--after { right: 12px; }
+        /* Optional timeframe chip sits along the bottom so it can never collide
+           with the Before/After pair above it. */
+        .ba-label--tf { top: auto; bottom: 12px; left: 12px; }
         .ba-info {
           flex: 1 1 auto;
           padding: var(--space-md) var(--space-lg);

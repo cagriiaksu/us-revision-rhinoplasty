@@ -1,5 +1,6 @@
 ---
 import { content } from '../data/content';
+import { asset } from '../data/asset';
 const { footer } = content;
 const currentYear = new Date().getFullYear();
 ---
@@ -8,8 +9,15 @@ const currentYear = new Date().getFullYear();
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#hero" class="footer-logo" aria-label="Dr. Celal Alioglu">
-          <span class="footer-logo-wordmark">Dr. Celal Alioglu</span>
+        <a href="#hero" class="footer-logo">
+          {/* Cream variant — the footer sits on --black. */}
+          <img
+            src={asset('/images/logo-cream.svg')}
+            alt={content.header.logoAlt}
+            class="footer-logo-img"
+            width="4030"
+            height="1071"
+          />
         </a>
         <p class="footer-tagline">{footer.tagline}</p>
       </div>
@@ -67,12 +75,10 @@ const currentYear = new Date().getFullYear();
     margin-bottom: var(--space-md);
   }
 
-  .footer-logo-wordmark {
-    font-family: var(--font-heading);
-    font-size: 1.375rem;
-    font-weight: 600;
-    color: var(--cream);
-    letter-spacing: 0.01em;
+  .footer-logo-img {
+    display: block;
+    height: 42px;
+    width: auto;
   }
 
   .footer-tagline {

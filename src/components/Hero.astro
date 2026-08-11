@@ -212,13 +212,17 @@ const { hero } = content;
       gap: var(--space-3xl);
     }
 
+    /* 640px, not 600px: at the widest container the image column is ~507px, so a
+       4:5 portrait renders 634px tall. A 600px cap made object-fit: cover trim
+       ~17px off the top, which clipped the Google rating badge sitting flush
+       against the top edge of the hero photo. 640px clears it with no crop. */
     .hero-image {
-      max-height: 600px;
+      max-height: 640px;
     }
 
     .hero-image img {
       aspect-ratio: auto;
-      max-height: 600px;
+      max-height: 640px;
     }
 
     .hero-credit {
