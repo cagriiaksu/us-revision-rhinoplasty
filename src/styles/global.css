@@ -58,13 +58,17 @@
   /* Sizing */
   --container-max: 1180px;
   --container-narrow: 760px;
-  --header-height: 76px;
+  /* Fixed header: 56px on mobile, 82px from 1024px up. Everything that clears
+     the header (html scroll-padding-top, the slide-in nav panel, the hero's top
+     padding) reads this token, so both breakpoints stay in sync from one place. */
+  --header-height: 56px;
 
   /* Border radius — softened, smaller, more editorial */
   --radius-sm: 3px;
   --radius-md: 6px;
   --radius-lg: 10px;
   --radius-xl: 14px;
+  --radius-2xl: 16px; /* desktop hero slab */
   --radius-full: 9999px;
 
   /* Shadows — lighter, warmer, less heavy */
@@ -77,6 +81,13 @@
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
   --transition-slow: 400ms ease;
+}
+
+/* Keep this in step with Header.astro. */
+@media (min-width: 1024px) {
+  :root {
+    --header-height: 82px;
+  }
 }
 
 /* --- Reset --- */

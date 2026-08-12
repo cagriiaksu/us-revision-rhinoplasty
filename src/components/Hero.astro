@@ -1,232 +1,452 @@
 ---
+// Hero — two approved designs, one per breakpoint, switching at 1024px (the
+// same breakpoint the header uses):
+//
+//   >= 1024px ("9A"): one sand slab, content left / portrait right, no shadow,
+//                     no border, 16px radius on all four corners.
+//   <  1024px ("6A"): full-bleed photo band, then a sand card pulled up over it
+//                     by 40px holding the headline, checklist and CTA.
+//
+// The two layouts share ONE <picture>, repositioned with flex order + CSS. Two
+// separate <img> elements toggled with display:none would download both files
+// in most browsers, which would wreck the LCP on the breakpoint that loses.
 import { content } from '../data/content';
 import { asset } from '../data/asset';
 const { hero } = content;
 ---
 
 <section class="hero" id="hero">
-  <div class="container hero-inner">
-    <div class="hero-content">
-      <h1 class="hero-headline">
-        <span class="hero-headline-lead">{hero.headlineStart}</span>
-        <em class="hero-headline-accent">{hero.headlineHighlight}</em>
-        {hero.headlineEnd && <span class="hero-headline-end">{hero.headlineEnd}</span>}
-      </h1>
-
-      {hero.subcopy && <p class="hero-sub">{hero.subcopy}</p>}
-
-      <ul class="hero-features">
-        {hero.features.map(feat => (
-          <li>{feat}</li>
-        ))}
-      </ul>
-
-      <div class="hero-cta">
-        <a href="#consultation" class="btn btn-primary btn-lg" data-open-form-modal>
-          {hero.ctaButton}
-        </a>
+  <div class="hero-shell">
+    <div class="hero-slab">
+      <div class="hero-media">
+        <picture>
+          <source
+            media="(min-width: 1024px)"
+            type="image/webp"
+            srcset={`${asset('/images/celal-hero-slab-1600.webp')} 1600w, ${asset('/images/celal-hero-slab-2000.webp')} 2000w`}
+            sizes="(min-width: 1180px) 580px, 50vw"
+          />
+          {/* Mobile band is the default candidate, so phones never see the
+              2000px slab crop. */}
+          <img
+            src={asset('/images/celal-hero-band-600.webp')}
+            alt={hero.imageAlt}
+            width="600"
+            height="645"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </picture>
       </div>
-    </div>
 
-    <div class="hero-image">
-      <img
-        src={asset('/images/celal-hero.webp')}
-        srcset={`${asset('/images/celal-hero-mobile.webp')} 720w, ${asset('/images/celal-hero.webp')} 1280w`}
-        sizes="(max-width: 768px) 720px, 600px"
-        alt={hero.imageAlt}
-        width="1280"
-        height="1600"
-        loading="eager"
-        fetchpriority="high"
-      />
-      {hero.imageName && (
-        <span class="hero-credit">
-          {hero.imageName}
-          {hero.imageRole && <span class="hero-credit-role">{hero.imageRole}</span>}
-        </span>
-      )}
+      <div class="hero-card">
+        <p class="hero-eyebrow">{hero.eyebrow}</p>
+
+        {/* One h1 in the DOM; the inactive line is display:none, so it is out
+            of the accessibility tree rather than read twice. */}
+        <h1 class="hero-headline">
+          <span class="hl-desktop">{hero.headlineDesktop}</span>
+          <span class="hl-mobile">{hero.headlineMobile}</span>
+          <span class="hl-accent">{hero.headlineAccent}</span>
+        </h1>
+
+        <ul class="hero-features hero-features-desktop">
+          {hero.featuresDesktop.map(feat => (
+            <li><span class="hero-check" aria-hidden="true"></span>{feat}</li>
+          ))}
+        </ul>
+
+        <ul class="hero-features hero-features-mobile">
+          {hero.featuresMobile.map(feat => (
+            <li><span class="hero-check" aria-hidden="true"></span>{feat}</li>
+          ))}
+        </ul>
+
+        <div class="hero-cta">
+          <a href="#consultation" class="btn btn-primary hero-pill" data-open-form-modal>
+            {hero.ctaButton}
+          </a>
+          <p class="hero-note">{hero.ctaNote}</p>
+
+          <p class="hero-ratings">
+            <svg class="hero-ratings-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.06 6.6.86-4.83 4.55 1.2 6.53L12 17.35 6.13 20.5l1.2-6.53L2.5 9.42l6.6-.86L12 2.5z"/></svg>
+            {hero.ratings.map((r, i) => (
+              <>
+                {i > 0 && <span class="hero-ratings-sep" aria-hidden="true">·</span>}
+                <a href={r.url} target="_blank" rel="noopener" class="hero-ratings-link">
+                  <span class="hero-ratings-score">{r.score}</span> {r.platform}
+                </a>
+              </>
+            ))}
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
+  /* ── Shell ───────────────────────────────────────────────────────── */
   .hero {
     position: relative;
     background: var(--cream);
-    padding: calc(var(--header-height) + var(--space-2xl)) 0 var(--space-3xl);
+    /* Photo band starts flush under the fixed header on mobile. */
+    padding-top: var(--header-height);
+  }
+
+  .hero-shell {
+    width: 100%;
+  }
+
+  /* Mobile: no slab surface at all — the card below carries the sand. */
+  .hero-slab {
+    display: block;
+  }
+
+  /* ── Photo ───────────────────────────────────────────────────────── */
+  /* Absolute-positioned picture in a relative box: a percentage height on the
+     img would not resolve reliably against a stretched flex item, and this also
+     overrides the global `img { height: auto }` reset. */
+  .hero-media {
+    position: relative;
     overflow: hidden;
+    height: 300px;
+    background: var(--line);
   }
 
-  /* Mobile-first: content first (h1 → features → CTA), image last. */
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-2xl);
-    align-items: center;
+  .hero-media picture {
+    position: absolute;
+    inset: 0;
+    display: block;
   }
 
-  .hero-content {
-    text-align: left;
+  .hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Keeps the top of the head clear of the crop. */
+    object-position: 56% 6%;
+  }
+
+  /* ── Card ────────────────────────────────────────────────────────── */
+  .hero-card {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    /* 40px below, not the comp's 20px: the next section is .section-alt
+       (--cream-2 #f3ede3) and the card is --sand #ece3d6 — close enough in tone
+       that at 20px, with the card's shadow spreading ~50px, the two surfaces
+       read as one block. 40px lets a clean band of --cream separate them. */
+    margin: -40px 12px 40px;
+    padding: 24px 20px;
+    background: var(--sand);
+    border-radius: 12px;
+    /* The spec'd soft shadow, plus a tight second layer that grounds the bottom
+       edge against the cream below — the wide blur alone spreads too far to read
+       as an edge. Desktop sets box-shadow: none, so this is mobile/tablet only. */
+    box-shadow:
+      0 14px 38px rgba(38, 35, 31, 0.12),
+      0 4px 10px rgba(38, 35, 31, 0.05);
+  }
+
+  /* Desktop-only eyebrow — mobile promotes this copy into the H1. */
+  .hero-eyebrow {
+    display: none;
   }
 
   .hero-headline {
+    margin: 0;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
     color: var(--ink);
-    margin-bottom: var(--space-xl);
+    text-wrap: pretty;
   }
 
-  .hero-headline-lead {
+  .hl-desktop {
+    display: none;
+  }
+
+  .hl-mobile {
     display: block;
   }
 
-  /* Accent line on its own row, brand champagne (not literal "white"). */
-  .hero-headline-accent {
+  .hl-accent {
     display: block;
     margin-top: 0.12em;
-    font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     color: var(--champagne-dark);
   }
 
-  .hero-headline-end {
-    display: block;
-  }
-
-  /* Aspirational subcopy under the H1 — subordinate to the headline. */
-  .hero-sub {
-    max-width: 46ch;
-    margin-bottom: var(--space-xl);
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--ink-soft);
-  }
-
-  /* Trust checklist — vertical, champagne check marks (replaces old dot chips). */
+  /* ── Checklist ───────────────────────────────────────────────────── */
   .hero-features {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-xl);
+    gap: 12px;
+    list-style: none;
+  }
+
+  .hero-features-desktop {
+    display: none;
   }
 
   .hero-features li {
-    position: relative;
-    padding-left: 28px;
-    font-size: 0.9375rem;
-    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 14px;
+    line-height: 1.4;
     color: var(--ink);
   }
 
-  .hero-features li::before {
-    content: '';
-    position: absolute;
-    left: 5px;
-    top: 0.28em;
-    width: 6px;
-    height: 11px;
-    border: solid var(--champagne-dark);
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+  /* Circled check, drawn in CSS (the repo's existing idiom) so it does not
+     depend on the body font carrying U+2713. */
+  .hero-check {
+    position: relative;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--champagne-soft);
   }
 
+  /* -60% rather than -50% on Y: a check reads optically centred slightly above
+     the geometric middle of its bounding box. */
+  .hero-check::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 7px;
+    border: solid var(--champagne-dark);
+    border-width: 0 1.5px 1.5px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+  }
+
+  /* ── CTA ─────────────────────────────────────────────────────────── */
   .hero-cta {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
   }
 
-  .hero-image {
-    position: relative;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .hero-image img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  /* Soft scrim so the name stays legible over any image. */
-  .hero-image::after {
-    content: '';
-    position: absolute;
-    inset: auto 0 0 0;
-    height: 52%;
-    background: linear-gradient(to top, rgba(23, 21, 15, 0.68), rgba(23, 21, 15, 0));
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  /* Editorial name label (celebrity/model leverage) — visual layer only, not in alt. */
-  .hero-credit {
-    position: absolute;
-    left: var(--space-lg);
-    bottom: var(--space-lg);
-    z-index: 2;
-    font-family: var(--font-heading);
-    font-size: 1.625rem;
+  /* Declared at both breakpoints because global.css overrides .btn padding
+     below 768px, which would otherwise reshape the pill. */
+  .hero-pill {
+    height: 50px;
+    width: 250px;
+    max-width: 100%;
+    padding: 0;
+    border-radius: var(--radius-full);
+    font-size: 15px;
     font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: 0.01em;
-    color: var(--cream);
-    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
-    pointer-events: none;
   }
 
-  /* Small "known for" descriptor under the name. */
-  .hero-credit-role {
-    display: block;
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--champagne);
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
-    margin-top: 4px;
+  .hero-pill:hover {
+    background: #3a352e;
   }
 
-  /* Champagne accent rule above the name to draw the eye. */
-  .hero-credit::before {
-    content: '';
-    display: block;
-    width: 34px;
-    height: 2px;
-    margin-bottom: var(--space-xs);
-    background: var(--champagne);
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  .hero-note {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    text-align: center;
   }
 
-  @media (min-width: 768px) {
+  /* Reviews row is desktop-only — mobile carries the claim in the header bar. */
+  .hero-ratings {
+    display: none;
+  }
+
+  /* 768–1023px keeps the 6A stack, but capped and centred. Left full-bleed, an
+     820px-wide band would upscale the 600px crop 1.4x into a face-only shot and
+     the card would stretch to ~800px with its centred headline adrift. */
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .hero-slab {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+  }
+
+  /* ── Desktop 9A ──────────────────────────────────────────────────── */
+  @media (min-width: 1024px) {
     .hero {
-      padding: calc(var(--header-height) + var(--space-3xl)) 0 var(--space-4xl);
+      /* 8px above the slab, 44px below it. */
+      padding: calc(var(--header-height) + 8px) 0 44px;
     }
 
-    /* Desktop: two columns — content left, image right (source order preserved). */
-    .hero-inner {
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: var(--space-3xl);
+    .hero-shell {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--space-lg);
     }
 
-    /* 640px, not 600px: at the widest container the image column is ~507px, so a
-       4:5 portrait renders 634px tall. A 600px cap made object-fit: cover trim
-       ~17px off the top, which clipped the Google rating badge sitting flush
-       against the top edge of the hero photo. 640px clears it with no crop. */
-    .hero-image {
-      max-height: 640px;
+    .hero-slab {
+      display: flex;
+      align-items: stretch;
+      min-height: 520px;
+      background: var(--sand);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
     }
 
-    .hero-image img {
-      aspect-ratio: auto;
-      max-height: 640px;
+    /* Photo right, content left, without changing source order. */
+    .hero-media {
+      order: 2;
+      flex: 0 0 51.2%;
+      height: auto;
     }
 
-    .hero-credit {
-      font-size: 1.875rem;
+    .hero-media img {
+      /* 58% keeps the surgeon centred and pushes the dark door edge to the
+         right margin; 50% Y never crops the top of the head. */
+      object-position: 58% 50%;
+    }
+
+    .hero-card {
+      order: 1;
+      flex: 1 1 auto;
+      /* A percentage flex-basis on a padded column breaks under content-box
+         sizing, so the column is auto-basis with an explicit min-width. */
+      min-width: 0;
+      box-sizing: border-box;
+      justify-content: center;
+      gap: 0;
+      margin: 0;
+      /* 72px is the spec'd inset and holds from 1180px up, where .container is
+         at its 1180px max. Below that the column loses width faster than the
+         copy can give it back: at 1024px a 72px inset leaves 332px of text, the
+         46px H1 spills to a fourth line and the checklist labels wrap, which
+         pushes the slab to 705px and over-crops the portrait. Flexing the inset
+         down to 40px keeps the H1 at three lines — the comp's own line count —
+         with every type size untouched. */
+      padding: 44px clamp(40px, 20.5vw - 170px, 72px);
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .hero-eyebrow {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      line-height: 1.2;
+      color: var(--champagne-dark);
+    }
+
+    .hero-headline {
+      margin-top: 16px;
+      text-align: left;
+      font-size: 46px;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+    }
+
+    .hl-desktop {
+      display: block;
+    }
+
+    .hl-mobile {
+      display: none;
+    }
+
+    .hl-accent {
+      margin-top: 10px;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .hero-features {
+      margin-top: 20px;
+    }
+
+    .hero-features-desktop {
+      display: flex;
+    }
+
+    .hero-features-mobile {
+      display: none;
+    }
+
+    .hero-features li {
+      gap: 12px;
+      font-size: 15.5px;
+    }
+
+    .hero-check {
+      width: 22px;
+      height: 22px;
+    }
+
+    .hero-check::after {
+      width: 5px;
+      height: 9px;
+      border-width: 0 1.75px 1.75px 0;
+    }
+
+    .hero-cta {
+      margin-top: 26px;
+      align-items: flex-start;
+    }
+
+    .hero-pill {
+      height: 56px;
+      width: auto;
+      padding: 0 38px;
+      font-size: 16px;
+    }
+
+    .hero-note {
+      padding-left: 4px;
+      text-align: left;
+    }
+
+    .hero-ratings {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-self: stretch;
+      margin-top: 18px;
+      font-size: 12.5px;
+      line-height: 1.4;
+      color: var(--gray-500);
+    }
+
+    .hero-ratings-star {
+      flex: 0 0 auto;
+      width: 12px;
+      height: 12px;
+      color: var(--champagne-dark);
+    }
+
+    .hero-ratings-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero-ratings-link:hover {
+      text-decoration: underline;
+    }
+
+    .hero-ratings-score {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* No token holds this value; it is only ever this separator. */
+    .hero-ratings-sep {
+      color: #c3b8a6;
     }
   }
 </style>

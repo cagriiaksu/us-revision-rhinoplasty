@@ -68,25 +68,59 @@ export const content = {
   },
 
   // ─── Hero ────────────────────────────────────────────────────────
+  // Two approved designs, one per breakpoint (desktop 9A / mobile 6A), so the
+  // headline and the trust checklist deliberately differ by breakpoint. Only
+  // one of each pair is ever displayed — see Hero.astro.
   hero: {
-    headlineStart: "A second chance at the nose you hoped for.",
-    headlineHighlight: "Revision Rhinoplasty in Turkey",
-    headlineEnd: "",
-    // Kept deliberately plain: this audience has been oversold once, so the
-    // promise stays bounded by "realistic" and "what your nose can safely achieve".
-    subcopy:
-      "Unhappy with a previous rhinoplasty — your breathing, your symmetry, or how it looks? Dr. Celal Alioglu plans careful, realistic correction around what your nose can safely achieve.",
-    features: [
+    // Desktop only: the eyebrow carries the "Revision rhinoplasty in Turkey"
+    // keyword that mobile promotes into its H1 instead.
+    eyebrow: "Revision rhinoplasty in Turkey",
+    headlineDesktop: "A second chance at the nose you hoped for.",
+    headlineMobile: "Revision Rhinoplasty in Turkey",
+    // Shared gold serif line under either headline.
+    headlineAccent: "with Dr Celal Alioglu",
+    // Desktop checklist — fuller sentences, the wider column can carry them.
+    featuresDesktop: [
       "Revision (secondary) rhinoplasty expert",
+      "Every procedure performed personally by Dr. Celal",
       "ASPS & ISAPS member · European Board certified",
       "15+ years focused on facial aesthetics",
-      "Every procedure performed personally by Dr. Celal",
+    ],
+    // Mobile checklist — short labels for the narrow card. "15+ Years" matches
+    // the desktop list and the verified figure (the design comp said 10+).
+    featuresMobile: [
+      "ASPS, ISAPS member",
+      "European Board Certified",
+      "Revision Rhinoplasty Expert",
+      "15+ Years of Expertise in Facial Surgeries",
     ],
     ctaButton: "Book a free consultation",
-    // Name overlay left empty on purpose — no celebrity-leverage framing for this
-    // evidence-driven revision audience.
-    imageName: "",
-    imageRole: "",
+    ctaNote: "Free video consultation · no obligation",
+    // Verified with the clinic (Aug 2026). Only `score` and `platform` render —
+    // as the desktop reviews row; mobile carries no rating claim in the hero.
+    // `count` is kept for the counted variant of that row, not shown today.
+    ratings: [
+      {
+        platform: "Google",
+        score: "4.9",
+        count: "252+",
+        // Stable CID permalink — the Google local-search deep link the clinic
+        // sent carries session parameters that expire.
+        url: "https://www.google.com/maps?cid=1119166339849112276",
+      },
+      {
+        platform: "Trustpilot",
+        score: "4.9",
+        count: "106",
+        url: "https://www.trustpilot.com/review/celalalioglu.com",
+      },
+      {
+        platform: "RealSelf",
+        score: "5.0",
+        count: "70",
+        url: "https://www.realself.com/dr/celal-alioglu-istanbul-turkey#reviews",
+      },
+    ],
     imageAlt:
       "Dr. Celal Alioglu, revision rhinoplasty surgeon, in his Istanbul clinic",
   },

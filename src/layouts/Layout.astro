@@ -42,11 +42,22 @@ const ogImage = new URL(asset('/images/celal-og.webp'), Astro.site).href;
     <Font cssVariable="--font-heading" preload />
     <Font cssVariable="--font-body" preload />
 
-    <!-- Preload Hero Image (LCP) -->
+    <!--
+      Preload Hero Image (LCP). The hero serves two different crops either side
+      of 1024px — a full-bleed band on mobile, the slab portrait on desktop — so
+      each breakpoint preloads only its own file. `media` and `imagesizes` must
+      stay in step with the <picture> in Hero.astro or the browser will preload
+      one candidate and then fetch a second for the element.
+    -->
     <link rel="preload" as="image" type="image/webp" fetchpriority="high"
-      href={asset('/images/celal-hero.webp')}
-      imagesrcset={`${asset('/images/celal-hero-mobile.webp')} 720w, ${asset('/images/celal-hero.webp')} 1280w`}
-      imagesizes="(max-width: 768px) 720px, 1280px"
+      media="(max-width: 1023.98px)"
+      href={asset('/images/celal-hero-band-600.webp')}
+    />
+    <link rel="preload" as="image" type="image/webp" fetchpriority="high"
+      media="(min-width: 1024px)"
+      href={asset('/images/celal-hero-slab-1600.webp')}
+      imagesrcset={`${asset('/images/celal-hero-slab-1600.webp')} 1600w, ${asset('/images/celal-hero-slab-2000.webp')} 2000w`}
+      imagesizes="(min-width: 1180px) 580px, 50vw"
     />
 
     <!-- DNS Prefetch (geo lookup for phone input) -->
