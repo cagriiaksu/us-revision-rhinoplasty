@@ -67,10 +67,6 @@ const infoIcons = [
               </div>
             ))}
           </dl>
-
-          <ul class="proc-points">
-            {p.points.map((pt) => <li>{pt}</li>)}
-          </ul>
         </div>
       </article>
     ))}
@@ -269,37 +265,6 @@ const infoIcons = [
     color: var(--ink);
   }
 
-  /* ---- Bullet points ---- */
-  .proc-points {
-    list-style: none;
-    margin: 18px 0 0;
-    padding: 18px 0 0;
-    border-top: 1px solid var(--line);
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-  }
-
-  .proc-points li {
-    position: relative;
-    padding-left: 19px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--ink);
-  }
-
-  .proc-points li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 5px;
-    width: 8px;
-    height: 8px;
-    border: 1px solid var(--champagne);
-    border-radius: 50%;
-  }
-
   .proc-cta-wrap {
     text-align: center;
     margin-top: var(--space-xl);
@@ -363,7 +328,7 @@ const infoIcons = [
   }
 
   /* =========================================================
-     DESKTOP — ≥ 1024px : larger type, 2-col points
+     DESKTOP — ≥ 1024px : larger type
      ========================================================= */
   @media (min-width: 1024px) {
     .proc-panels { gap: var(--space-xl); }
@@ -373,8 +338,6 @@ const infoIcons = [
     .proc-desc { font-size: 15px; line-height: 1.75; margin-bottom: 26px; }
     .proc-spec-icon { width: 36px; height: 36px; }
     .proc-spec dd { font-size: 15px; }
-    /* .proc-points stays single-column: side-by-side cards are ~480px of inner
-       width, too narrow to split the bullets into two readable columns. */
   }
 </style>
 

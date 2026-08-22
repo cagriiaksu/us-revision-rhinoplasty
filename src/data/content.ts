@@ -56,13 +56,18 @@ export const content = {
   // ─── Header ──────────────────────────────────────────────────────
   header: {
     logoAlt: "Dr. Celal Alioglu",
+    // One list drives both breakpoints, in page order. `mobileOnly` items are
+    // dropped from the desktop bar, which is deliberately down to four: the
+    // header there sits on the hero's clean cream and a six-link bar crowded it.
+    // The slide-in panel has room, so it keeps the full set.
     navLinks: [
       { href: "#surgeon", label: "Dr. Celal" },
       { href: "#before-after", label: "Before & After" },
-      { href: "#reviews", label: "Reviews" },
-      { href: "#procedures", label: "Procedures" },
+      { href: "#video-testimonials", label: "Testimonials" },
+      { href: "#reviews", label: "Reviews", mobileOnly: true },
+      { href: "#procedures", label: "Procedures", mobileOnly: true },
       { href: "#packages", label: "Package" },
-      { href: "#faq", label: "FAQ" },
+      { href: "#faq", label: "FAQ", mobileOnly: true },
     ],
     ctaButton: "Book a consultation",
   },
@@ -73,37 +78,52 @@ export const content = {
   // one of each pair is ever displayed — see Hero.astro.
   hero: {
     // Desktop only: the eyebrow carries the "Revision rhinoplasty in Turkey"
-    // keyword that mobile promotes into its H1 instead.
+    // keyword. Mobile leads with the H1 alone.
     eyebrow: "Revision rhinoplasty in Turkey",
-    headlineDesktop: "A second chance at the nose you hoped for.",
-    headlineMobile: "Revision Rhinoplasty in Turkey",
+    headlineDesktop: "Expert Revision Rhinoplasty",
+    headlineMobile: "Expert Revision Rhinoplasty",
     // Shared gold serif line under either headline.
     headlineAccent: "with Dr Celal Alioglu",
-    // Desktop checklist — fuller sentences, the wider column can carry them.
+    // One approved checklist, shown at both breakpoints. The years figure is
+    // 10+ everywhere on the site — see the surgeon bio.
     featuresDesktop: [
-      "Revision (secondary) rhinoplasty expert",
-      "Every procedure performed personally by Dr. Celal",
-      "ASPS & ISAPS member · European Board certified",
-      "15+ years focused on facial aesthetics",
+      "Half of his rhinoplasties are revisions from other surgeons",
+      "American Society of Plastic Surgeons member",
+      "Every procedure is performed personally by Dr Celal",
+      "10+ years focused on facial aesthetics",
     ],
-    // Mobile checklist — short labels for the narrow card. "15+ Years" matches
-    // the desktop list and the verified figure (the design comp said 10+).
     featuresMobile: [
-      "ASPS, ISAPS member",
-      "European Board Certified",
-      "Revision Rhinoplasty Expert",
-      "15+ Years of Expertise in Facial Surgeries",
+      "Half of his rhinoplasties are revisions from other surgeons",
+      "American Society of Plastic Surgeons member",
+      "Every procedure is performed personally by Dr Celal",
+      "10+ years focused on facial aesthetics",
     ],
     ctaButton: "Book a free consultation",
-    ctaNote: "Free video consultation · no obligation",
-    // Verified with the clinic (Aug 2026). Only `score` and `platform` render —
-    // as the desktop reviews row; mobile carries no rating claim in the hero.
-    // `count` is kept for the counted variant of that row, not shown today.
+    // Word appended to each rating's `count` in the hero trust bar.
+    reviewsLabel: "reviews",
+    // Verified with the clinic (Aug 2026). All fields render, in the desktop
+    // trust bar that straddles the hero slab's bottom edge; mobile carries no
+    // rating claim in the hero.
+    //
+    // `logo` points at a trimmed, resized derivative of the brand asset the
+    // clinic supplied (originals kept alongside, untouched): cropped to its ink
+    // box so one CSS height renders all three at the same optical size, and
+    // resampled to 60px tall = 3x the 20px render height. `logoW`/`logoH` are
+    // the derivative's intrinsic pixels, set on the <img> so it reserves its
+    // space and cannot shift the bar as it decodes.
+    //
+    // `markOnly` flags a logo that carries no wordmark — Google supplied only
+    // the "G", so that cell pairs the mark with the platform name in text while
+    // the other two lockups already name themselves.
     ratings: [
       {
         platform: "Google",
         score: "4.9",
         count: "252+",
+        logo: "/images/review-google.webp",
+        logoW: 59,
+        logoH: 60,
+        markOnly: true,
         // Stable CID permalink — the Google local-search deep link the clinic
         // sent carries session parameters that expire.
         url: "https://www.google.com/maps?cid=1119166339849112276",
@@ -112,12 +132,20 @@ export const content = {
         platform: "Trustpilot",
         score: "4.9",
         count: "106",
+        logo: "/images/review-trustpilot.webp",
+        logoW: 244,
+        logoH: 60,
+        markOnly: false,
         url: "https://www.trustpilot.com/review/celalalioglu.com",
       },
       {
         platform: "RealSelf",
         score: "5.0",
         count: "70",
+        logo: "/images/review-realself.webp",
+        logoW: 267,
+        logoH: 60,
+        markOnly: false,
         url: "https://www.realself.com/dr/celal-alioglu-istanbul-turkey#reviews",
       },
     ],
@@ -139,13 +167,13 @@ export const content = {
   surgeonBio: {
     eyebrow: "Meet your surgeon",
     name: "Dr. Celal Alioglu",
-    title: "Board-Certified Plastic Surgeon · Rhinoplasty & Facial Aesthetics Specialist",
+    title: "Board-Certified Plastic Surgeon & Aesthetics Specialist",
     bio: [
-      "With over 15 years specializing in facial aesthetics, Dr. Celal Alioglu is internationally recognized for his personalized approach to rhinoplasty. Whether refining a dorsal hump, reshaping a tip, or correcting a deviated septum, his work prioritizes results that fit naturally with your face — never the generic “surgery nose.”",
-      "Dr. Celal personally performs every procedure at Medicana Hospital — no assistants, no substitutes. Each rhinoplasty plan is built around your facial proportions, features, and breathing function, combining aesthetic refinement with structural integrity using the Piezo (ultrasonic) technique where appropriate.",
+      "Dr. Celal Alioglu has been performing rhinoplasty for over 10 years. About half of his practice today is secondary rhinoplasty: patients who had their first surgery with another surgeon and came to him to have it corrected.",
+      "He consults and examines patients himself at his practice on Bağdat Caddesi in Suadiye, Istanbul, and operates at Medicana Kadıköy, a JCI-accredited hospital.",
     ],
     quote:
-      "“A great nose isn't the one that gets noticed — it's the one that lets the rest of your face shine.”",
+      "“The best result never looks like it was fixed. It looks like it was always there.”",
     ctaButton: "Book a free consultation",
     imageAlt: "Dr. Celal Alioglu, board-certified plastic surgeon, in his Istanbul clinic",
     credentialsTitle: "Certifications & accreditations",
@@ -211,17 +239,24 @@ export const content = {
   },
 
   // ─── Reviews Carousel ────────────────────────────────────────────
-  // Full verified review set ported from the clinic's own Dr. Celal AU rhinoplasty
-  // page (src/data/reviews.ts there) — all 23 entries, plus "Billy Jean" which only
-  // existed on this page. Text is reproduced as published, localized to en-US
-  // spelling only ("travelled" → "traveled", "organised" → "organized"); no wording,
-  // claims or ratings were changed. `location` is set only where the review text
-  // itself states where the patient traveled from — never inferred.
-  // Ordering is localized for this page: revision-rhinoplasty and US-patient
-  // reviews lead, then the long-form reviews, then primary-rhinoplasty cases.
-  // NB: the source page lists some patients twice under different platforms
-  // (Angelina Stapley/Hiimangelina, StephanieGan77/Steph Ganowski) — kept as-is.
-  // TODO before launch: confirm review consent with the clinic.
+  // Curated subset of the verified review set ported from the clinic's own
+  // Dr. Celal AU rhinoplasty page (`src/data/reviews.ts` there), plus "Billy Jean"
+  // which only existed on this page. Text is reproduced as published, localized to
+  // en-US spelling only ("travelled" → "traveled", "organised" → "organized"); no
+  // wording, claims or ratings were changed. `location` is set only where the review
+  // text itself states where the patient traveled from — never inferred.
+  //
+  // Curated for this page (Aug 2026): 24 → 9. Revision (secondary) rhinoplasty and
+  // US patients lead; the rest are kept only where they answer a question this
+  // audience actually has — surgeon selection after a bad first result, breathing
+  // function, traveling from abroad, how the result holds up a year on, and going
+  // in nervous. Cut: the source page's duplicate entries (the same patient listed
+  // twice under two platforms — Hiimangelina = Angelina Stapley, Steph Ganowski =
+  // StephanieGan77), reviews whose substance is another procedure (breast, eyelid),
+  // and interchangeable one-line praise that added length without adding evidence.
+  // The full 24-entry set is in git history at 74514af if any are ever needed back.
+  // TODO before launch: confirm review consent with the clinic; source more
+  // revision-specific and US reviews to replace the primary-rhinoplasty fallbacks.
   reviews: {
     eyebrow: "What patients say",
     sectionTitle: "Patient reviews",
@@ -233,7 +268,7 @@ export const content = {
     ctaButton: "Start your journey",
     emptyText: "Patient reviews will appear here once published.",
     items: [
-      // ── Revision (secondary) rhinoplasty — lead the carousel on this page ──
+      // ── Revision (secondary) rhinoplasty and US patients — lead the carousel ──
       {
         name: "Katie",
         rating: 5,
@@ -246,36 +281,33 @@ export const content = {
         text: "My experience with Dr. Celal Alioglu was truly exceptional. I traveled from the United States for revision rhinoplasty and breast augmentation, and my nose is now straighter, more symmetrical, and much easier to breathe through.",
       },
       {
-        name: "Hiimangelina",
-        location: "United States",
-        rating: 5,
-        text: "I traveled from the United States for revision rhinoplasty and breast augmentation. My nose is now straighter, more symmetrical, and I could breathe clearly almost immediately after surgery.",
-      },
-      {
         name: "Katya Malashevich",
         rating: 5,
         text: "My rhinoplasty with Dr. Celal Alioglu was a life-changing experience. He listened carefully, explained what needed to be corrected, and delivered a natural-looking result that improved both my appearance and breathing.",
       },
 
-      // ── Long-form reviews already published on this page ──
-      {
-        name: "Samantha Boyland",
-        location: "Australia",
-        rating: 5,
-        text: "I flew from Australia to see Dr. Celal. After viewing many doctors online I thought what a great fit?! I went for rhinoplasty and breast lift and implants. The consultation was great. Though I left a little disappointed after he said I did not need implants, and I really wanted them. I trusted his expertise and we went ahead with the rhinoplasty and lift. My nose is absolutely perfect and now my breasts have settled, I see why he talked me out of implants, not just for the fullness, but the heavy lifting that lifts them out of that. I would recommend everyone to Celal. It's not about a 'one stop shop' but what works for you. I've been told by everyone that my nose looks like something that should have always been there and not a 'surgery nose' and the more my breasts heal the more I am happy I didn't bother with implants. The package I got included everything I needed and the response to any questions I had were answered quickly. Thanks again.",
-      },
+      // ── Choosing a surgeon after a first result you regret ──
       {
         name: "Billy Jean",
         rating: 5,
         text: "Turkey is saturated with plastic surgeons. It can be confusing to select the right surgeon for your specific needs. I started my research a year ago, followed surgeons on social media and realself, checked their qualifications, flew to Turkey for consultations. All the hard work paid off because I found Dr Celal!! His attention to detail and natural results speak for themselves.",
       },
-
-      // ── Primary rhinoplasty — international patients ──
       {
-        name: "Jennifer Bonnici",
-        location: "Australia",
+        name: "EmzHeart",
         rating: 5,
-        text: "I came from Australia and had rhinoplasty with Dr. Celal Alioglu. He exceeded my expectations and gave me the best rhinoplasty I could have asked for. His team was professional, reassuring, and easy to communicate with.",
+        text: "I had rhinoplasty and upper blepharoplasty with Dr. Celal. I didn't want a completely different nose, only subtle corrections, and that is exactly what he delivered. The result looks natural and suits my face.",
+      },
+      {
+        name: "Harris Ashraf",
+        rating: 5,
+        text: "Dr. Celal did a really good job with my rhinoplasty. I was nervous about the result, but he reassured me and delivered a natural result that was better than I expected.",
+      },
+
+      // ── Breathing function, traveling from abroad, and the result a year on ──
+      {
+        name: "Majid",
+        rating: 5,
+        text: "I recently had rhinoplasty with Dr. Celal Alioglu, and it was one of the best decisions I have ever made. The result is both aesthetic and functional, and my breathing has improved dramatically.",
       },
       {
         name: "Soner Oruc",
@@ -284,85 +316,9 @@ export const content = {
         text: "I traveled from Sydney, Australia to Istanbul for rhinoplasty with Dr. Celal. The hotel, transfers, consultation, and surgery were all well organized. My nose looks amazing, and I can breathe properly again.",
       },
       {
-        name: "Terrific6487",
-        location: "Australia",
-        rating: 5,
-        text: "I traveled from Australia to Istanbul for rhinoplasty and breast augmentation with Dr. Celal. I wanted subtle, natural changes to my nose, and I am already very happy with my results.",
-      },
-      {
         name: "Natia Rasulova",
         rating: 5,
         text: "One year after my rhinoplasty with Dr. Celal, I am extremely happy with my result. My nose looks natural, suits my face, and I can breathe perfectly.",
-      },
-      {
-        name: "Maria Ivasyuk",
-        rating: 5,
-        text: "I am very happy with the result of my rhinoplasty with Dr. Celal and would recommend him to everyone.",
-      },
-      {
-        name: "Sociable482508",
-        rating: 5,
-        text: "I had my rhinoplasty with Dr. Celal Alioglu and I am extremely happy with the results. The surgery and recovery went smoothly, and my nose looks natural and balanced with my face.",
-      },
-      {
-        name: "Viktoriia16",
-        rating: 5,
-        text: "I am very grateful to Dr. Celal Alioglu for my beautiful rhinoplasty. My nose looks natural, harmonious, and perfectly suits my face. The hotel, transfers, and support were all very well organized.",
-      },
-      {
-        name: "StephanieGan77",
-        rating: 5,
-        text: "I had an excellent experience with Dr. Celal Alioglu and his team. My rhinoplasty already looks natural and balanced, with minimal bruising and very little pain during recovery.",
-      },
-      {
-        name: "Considerate104601",
-        rating: 5,
-        text: "I trusted Dr. Celal to alter my nose in a way that suited my face, and he did an amazing job. I am healing well and very happy with the result.",
-      },
-      {
-        name: "Tatiana",
-        rating: 5,
-        text: "I traveled to Istanbul for rhinoplasty and blepharoplasty with Dr. Celal Alioglu. My nose looks natural, harmonious, and fits my face beautifully. The team was professional, responsive, and supportive throughout the whole process.",
-      },
-      {
-        name: "EmzHeart",
-        rating: 5,
-        text: "I had rhinoplasty and upper blepharoplasty with Dr. Celal. I didn't want a completely different nose, only subtle corrections, and that is exactly what he delivered. The result looks natural and suits my face.",
-      },
-      {
-        name: "Steph Ganowski",
-        rating: 5,
-        text: "I had an excellent experience with Dr. Celal Alioglu and his team. One week after rhinoplasty, I was already shocked by how natural and balanced my nose looked.",
-      },
-      {
-        name: "Kelani",
-        rating: 5,
-        text: "My experience with Dr. Celal has been incredible. One month after surgery, I love my results. My nose looks natural, and his team was kind and responsive throughout the process.",
-      },
-      {
-        name: "Bethany",
-        rating: 5,
-        text: "I had rhinoplasty with Dr. Celal and the whole experience was smooth and professional. His team made me feel comfortable throughout the process, and I am very happy with my results.",
-      },
-      {
-        name: "Valeria Smirnova",
-        rating: 5,
-        text: "I had rhinoplasty with Dr. Celal Alioglu and I am extremely happy with the result. My nose looks natural, balanced, and perfectly suited to my face.",
-      },
-      {
-        name: "Majid",
-        rating: 5,
-        text: "I recently had rhinoplasty with Dr. Celal Alioglu, and it was one of the best decisions I have ever made. The result is both aesthetic and functional, and my breathing has improved dramatically.",
-      },
-      {
-        name: "Valeriya Misuna",
-        rating: 5,
-        text: "I had rhinoplasty for the tip of my nose. Dr. Celal was kind, professional, and reassuring. My nose is currently healing, but I can already see a smaller, thinner, and neater result.",
-      },
-      {
-        name: "Harris Ashraf",
-        rating: 5,
-        text: "Dr. Celal did a really good job with my rhinoplasty. I was nervous about the result, but he reassured me and delivered a natural result that was better than I expected.",
       },
     ] as Review[],
   },
@@ -378,30 +334,28 @@ export const content = {
       {
         title: "Revision Rhinoplasty",
         tab: "Revision",
-        subtitle: "Correcting previous surgery (secondary rhinoplasty)",
+        subtitle: "Secondary rhinoplasty",
         description:
-          "Unhappy with a previous rhinoplasty? Dr. Celal performs revision (secondary) rhinoplasty to address breathing issues, asymmetry, or aesthetic concerns from prior procedures. Revision surgery is significantly more complex than primary rhinoplasty and demands deep expertise — Dr. Celal has corrected cases referred from clinics across Europe, Australia, and the Middle East.",
+          "Corrects breathing problems, asymmetry or aesthetic concerns left by an earlier rhinoplasty. Second operations are harder than first ones, and Dr. Celal regularly takes on cases referred from clinics in Europe, Australia and the Middle East.",
         info: [
           { label: "Operation time", value: "3–5 hours" },
           { label: "Return to work", value: "10–14 days" },
           { label: "Hospital stay", value: "1 night" },
           { label: "Anesthesia", value: "General" },
         ],
-        points: ["Addresses breathing, asymmetry & aesthetics", "For results from a prior surgery", "Advanced secondary-rhinoplasty expertise"],
       },
       {
         title: "Piezo Rhinoplasty",
         tab: "Piezo",
         subtitle: "Ultrasonic precision technique",
         description:
-          "Piezo (ultrasonic) rhinoplasty uses high-frequency vibrations to reshape the nasal bones with millimeter precision — without damaging surrounding tissue. The result: less bruising, faster recovery, and refined contours that traditional techniques can't match. Dr. Celal personalizes every procedure to your facial proportions and breathing function.",
+          "Reshapes the nasal bones with ultrasonic vibrations rather than manual instruments, so the surrounding tissue stays intact. Most patients bruise less and recover sooner. Dr. Celal plans each case around your facial proportions and your breathing.",
         info: [
           { label: "Operation time", value: "2–3 hours" },
           { label: "Return to work", value: "7–10 days" },
           { label: "Hospital stay", value: "1 night" },
           { label: "Anesthesia", value: "General" },
         ],
-        points: ["Ultrasonic bone reshaping", "Less bruising, faster recovery", "Refined, natural contours"],
       },
     ],
   },
@@ -424,7 +378,7 @@ export const content = {
       { feature: "24/7 English-speaking coordinator (Yagmur)", ours: true, uk: false },
       { feature: "Long-term follow-up after you fly home", ours: true, uk: false },
     ],
-    note: "In the US these are usually booked and paid for separately. With us, it's one package.",
+    note: "In the US, these services are typically booked and paid for separately. With Dr. Celal, they are all included in a single package.",
     ctaButton: "Get a free quote",
   },
 
@@ -432,7 +386,7 @@ export const content = {
   form: {
     sectionTitle: "Book your free, private consultation",
     sectionSubtitle:
-      "Share a few details and our team will be in touch — confidential, no obligation.",
+      "Share a few details and our team will be in touch. Confidential, no obligation.",
     minimalTitle: "Have a question? Let's talk",
     minimalCta: "Book a free consultation",
     infoTitle: "What to expect",

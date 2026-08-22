@@ -3,7 +3,8 @@
 // same breakpoint the header uses):
 //
 //   >= 1024px ("9A"): one sand slab, content left / portrait right, no shadow,
-//                     no border, 16px radius on all four corners.
+//                     no border, 16px radius on all four corners, plus a white
+//                     trust bar straddling the slab's bottom edge.
 //   <  1024px ("6A"): full-bleed photo band, then a sand card pulled up over it
 //                     by 40px holding the headline, checklist and CTA.
 //
@@ -66,21 +67,55 @@ const { hero } = content;
           <a href="#consultation" class="btn btn-primary hero-pill" data-open-form-modal>
             {hero.ctaButton}
           </a>
-          <p class="hero-note">{hero.ctaNote}</p>
-
-          <p class="hero-ratings">
-            <svg class="hero-ratings-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.06 6.6.86-4.83 4.55 1.2 6.53L12 17.35 6.13 20.5l1.2-6.53L2.5 9.42l6.6-.86L12 2.5z"/></svg>
-            {hero.ratings.map((r, i) => (
-              <>
-                {i > 0 && <span class="hero-ratings-sep" aria-hidden="true">·</span>}
-                <a href={r.url} target="_blank" rel="noopener" class="hero-ratings-link">
-                  <span class="hero-ratings-score">{r.score}</span> {r.platform}
-                </a>
-              </>
-            ))}
-          </p>
         </div>
       </div>
+    </div>
+
+    {/* Trust bar — desktop only. Deliberately a SIBLING of .hero-slab, not a
+        child: the slab's overflow:hidden (which clips the portrait to the 16px
+        corner) would cut off anything overhanging its bottom edge. A negative
+        top margin in normal flow lifts it 42px into the slab and leaves 40px
+        below, and keeps the hero's own height honest — no absolute positioning
+        to compensate for.
+
+        One star per cell, not five: five solid stars beside "4.9" would round
+        the score up. */}
+    <div class="hero-trust">
+      {hero.ratings.map(r => (
+        <a
+          href={r.url}
+          target="_blank"
+          rel="noopener"
+          class="hero-trust-item"
+          aria-label={`${r.platform}: ${r.score} out of 5 from ${r.count} ${hero.reviewsLabel} — opens in a new tab`}
+        >
+          {/* alt="" — the link's aria-label already names the platform, so the
+              logo would otherwise be announced twice. */}
+          <span class="hero-trust-brand">
+            <img
+              class:list={['hero-trust-logo', `is-${r.platform.toLowerCase()}`]}
+              src={asset(r.logo)}
+              alt=""
+              width={r.logoW}
+              height={r.logoH}
+              {/* lazy, though the bar is inside the first viewport on desktop:
+                  below 1024px .hero-trust is display:none, and a lazy image
+                  with no layout box is never fetched — so phones skip all three
+                  files instead of paying 12KB for a bar they never see. On
+                  desktop the bar is in view at load, so they fetch immediately,
+                  just below the LCP portrait in priority. */}
+              loading="lazy"
+              decoding="async"
+            />
+            {r.markOnly && <span class="hero-trust-platform">{r.platform}</span>}
+          </span>
+          <span class="hero-trust-meta">
+            <svg class="hero-trust-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.06 6.6.86-4.83 4.55 1.2 6.53L12 17.35 6.13 20.5l1.2-6.53L2.5 9.42l6.6-.86L12 2.5z"/></svg>
+            <span class="hero-trust-score">{r.score}</span>
+            <span class="hero-trust-sep"> · </span>{r.count} {hero.reviewsLabel}
+          </span>
+        </a>
+      ))}
     </div>
   </div>
 </section>
@@ -134,21 +169,30 @@ const { hero } = content;
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 22px;
     /* 40px below, not the comp's 20px: the next section is .section-alt
        (--cream-2 #f3ede3) and the card is --sand #ece3d6 — close enough in tone
        that at 20px, with the card's shadow spreading ~50px, the two surfaces
-       read as one block. 40px lets a clean band of --cream separate them. */
-    margin: -40px 12px 40px;
-    padding: 24px 20px;
+       read as one block. 40px lets a clean band of --cream separate them.
+
+       -52px above, not -40px: the bottom margin anchors the card's lower edge,
+       so the taller type below plus this deeper bite grow the card UPWARD over
+       the photo band rather than sliding the whole card up the screen. */
+    margin: -52px 12px 40px;
+    padding: 28px 20px;
     background: var(--sand);
-    border-radius: 12px;
-    /* The spec'd soft shadow, plus a tight second layer that grounds the bottom
-       edge against the cream below — the wide blur alone spreads too far to read
-       as an edge. Desktop sets box-shadow: none, so this is mobile/tablet only. */
+    /* 16px, the same corner the desktop slab uses (--radius-2xl), so the two
+       breakpoints round the same surface identically. */
+    border-radius: var(--radius-2xl);
+    /* Three layers, weakest first: a hairline ring that draws the actual edge,
+       a tight drop that grounds the card against the cream under its lower half,
+       and the spec'd wide blur for depth. The ring is an inset shadow rather
+       than a border so the desktop `box-shadow: none` cancels the whole stack
+       with no second override, and it adds no layout box. */
     box-shadow:
-      0 14px 38px rgba(38, 35, 31, 0.12),
-      0 4px 10px rgba(38, 35, 31, 0.05);
+      inset 0 0 0 1px rgba(38, 35, 31, 0.07),
+      0 4px 12px rgba(38, 35, 31, 0.08),
+      0 18px 44px rgba(38, 35, 31, 0.17);
   }
 
   /* Desktop-only eyebrow — mobile promotes this copy into the H1. */
@@ -159,7 +203,7 @@ const { hero } = content;
   .hero-headline {
     margin: 0;
     text-align: center;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 500;
     line-height: 1.18;
     letter-spacing: -0.01em;
@@ -186,7 +230,7 @@ const { hero } = content;
   .hero-features {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     list-style: none;
   }
 
@@ -197,8 +241,8 @@ const { hero } = content;
   .hero-features li {
     display: flex;
     align-items: center;
-    gap: 11px;
-    font-size: 14px;
+    gap: 12px;
+    font-size: 16px;
     line-height: 1.4;
     color: var(--ink);
   }
@@ -208,8 +252,8 @@ const { hero } = content;
   .hero-check {
     position: relative;
     flex: 0 0 auto;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     background: var(--white);
     border: 1px solid var(--champagne-soft);
@@ -222,10 +266,10 @@ const { hero } = content;
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 4px;
-    height: 7px;
+    width: 4.5px;
+    height: 8px;
     border: solid var(--champagne-dark);
-    border-width: 0 1.5px 1.5px 0;
+    border-width: 0 1.6px 1.6px 0;
     transform: translate(-50%, -60%) rotate(45deg);
   }
 
@@ -233,19 +277,19 @@ const { hero } = content;
   .hero-cta {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 11px;
     align-items: center;
   }
 
   /* Declared at both breakpoints because global.css overrides .btn padding
      below 768px, which would otherwise reshape the pill. */
   .hero-pill {
-    height: 50px;
-    width: 250px;
+    height: 54px;
+    width: 262px;
     max-width: 100%;
     padding: 0;
     border-radius: var(--radius-full);
-    font-size: 15px;
+    font-size: 15.5px;
     font-weight: 600;
   }
 
@@ -253,16 +297,79 @@ const { hero } = content;
     background: #3a352e;
   }
 
-  .hero-note {
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--ink-soft);
-    text-align: center;
+  /* Trust bar is desktop-only — mobile carries no rating claim in the hero. */
+  .hero-trust {
+    display: none;
   }
 
-  /* Reviews row is desktop-only — mobile carries the claim in the header bar. */
-  .hero-ratings {
-    display: none;
+  /* ── Mobile/tablet: the hero owns the first screen ─────────────────── */
+  /* The 6A comp puts nothing but header + photo + card on the opening screen.
+     Making .hero a column flexbox with a viewport floor lets the photo absorb
+     whatever the header and the card leave over, so SurgeonBio always starts
+     below the fold instead of peeking in.
+
+     svh, not vh: on iOS vh resolves to the LARGE viewport (bars collapsed), so
+     vh would overshoot by the height of the expanded Safari bars. */
+  @media (max-width: 1023.98px) {
+    .hero {
+      /* Nothing overlays the hero at tablet width — MobileCTABar is display:none
+         from 768px up. The phone override below pays for the bar. */
+      --cta-bar-h: 0px;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100svh - var(--cta-bar-h));
+    }
+
+    .hero-shell {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+    }
+
+    .hero-slab {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      /* The tablet block's `margin: 0 auto` is an auto cross-axis margin, which
+         switches off align-items: stretch. Without an explicit width the slab
+         would shrink to its content instead of the capped 520px. */
+      width: 100%;
+    }
+
+    /* Grows into the leftover space; never shorter than the 320px floor, so a
+       short viewport pushes the CTA toward the fold rather than letterboxing the
+       photo back down. */
+    .hero-media {
+      flex: 1 1 auto;
+      height: auto;
+      min-height: 300px;
+    }
+
+    /* The card is always measured by its own content — never compressed. */
+    .hero-card {
+      flex: 0 0 auto;
+    }
+  }
+
+  /* Below 768px the fixed MobileCTABar (56px button + 1px border-top, see
+     MobileCTABar.astro) covers the bottom of the hero, so the first screen is
+     that much shorter. */
+  @media (max-width: 767.98px) {
+    .hero {
+      --cta-bar-h: calc(57px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  /* Short phones (iPhone SE class) cannot carry the 300px band, the full card
+     and the CTA pill above the bar at the same time — the card alone is ~432px
+     once the headline and the last checklist item wrap. Hand the band's floor
+     back so the pill stays tappable without scrolling. 210px, not the previous
+     240px: it hands back exactly the 30px the enlarged card takes, so this
+     class of phone scrolls no further than it did before. */
+  @media (max-width: 767.98px) and (max-height: 700px) {
+    .hero-media {
+      min-height: 210px;
+    }
   }
 
   /* 768–1023px keeps the 6A stack, but capped and centred. Left full-bleed, an
@@ -278,8 +385,12 @@ const { hero } = content;
   /* ── Desktop 9A ──────────────────────────────────────────────────── */
   @media (min-width: 1024px) {
     .hero {
-      /* 8px above the slab, 44px below it. */
-      padding: calc(var(--header-height) + 8px) 0 44px;
+      /* 8px above the slab; 80px below it — 40px of that is eaten by the trust
+         bar's overhang, leaving the same ~40px of clean cream the slab had. */
+      padding: calc(var(--header-height) + 8px) 0 80px;
+      /* The card's text inset, hoisted to a custom property so the trust bar's
+         left edge can align with the headline without repeating the clamp. */
+      --hero-inset: clamp(40px, 20.5vw - 170px, 72px);
     }
 
     .hero-shell {
@@ -323,11 +434,15 @@ const { hero } = content;
       /* 72px is the spec'd inset and holds from 1180px up, where .container is
          at its 1180px max. Below that the column loses width faster than the
          copy can give it back: at 1024px a 72px inset leaves 332px of text, the
-         46px H1 spills to a fourth line and the checklist labels wrap, which
-         pushes the slab to 705px and over-crops the portrait. Flexing the inset
-         down to 40px keeps the H1 at three lines — the comp's own line count —
-         with every type size untouched. */
-      padding: 44px clamp(40px, 20.5vw - 170px, 72px);
+         H1 spills an extra line and the checklist labels wrap, which pushes the
+         slab past 700px and over-crops the portrait. Flexing the inset down to
+         40px keeps the H1 at three lines — the comp's own line count — with
+         every type size untouched. */
+      /* Bottom inset is deeper than the top: the column is
+         justify-content:center, so the extra bottom padding lifts the content
+         and reserves the strip the trust bar lands on, keeping the CTA note
+         ~34px clear of it. */
+      padding: 44px var(--hero-inset) 76px;
       background: transparent;
       border-radius: 0;
       box-shadow: none;
@@ -346,7 +461,12 @@ const { hero } = content;
     .hero-headline {
       margin-top: 16px;
       text-align: left;
-      font-size: 46px;
+      /* 42px, not the comp's 46px: the accent line renders at the same size as
+         the headline (below), and "with Dr Celal Alioglu" needs 418px at 46px
+         against a 396px text column at 1024px, so it would wrap to two lines
+         and push the slab ~130px past its 605px design height. 42px measures
+         380px and stays on one line at every desktop width. */
+      font-size: 42px;
       line-height: 1.1;
       letter-spacing: -0.015em;
     }
@@ -359,15 +479,15 @@ const { hero } = content;
       display: none;
     }
 
+    /* Desktop pairs the two H1 lines at the same size and weight — the accent
+       line reads as the headline's second line, separated only by color. */
     .hl-accent {
       margin-top: 10px;
-      font-size: 28px;
-      font-weight: 400;
-      line-height: 1.2;
+      line-height: 1.1;
     }
 
     .hero-features {
-      margin-top: 20px;
+      margin-top: 34px;
     }
 
     .hero-features-desktop {
@@ -406,46 +526,148 @@ const { hero } = content;
       font-size: 16px;
     }
 
-    .hero-note {
-      padding-left: 4px;
-      text-align: left;
+    /* ── Trust bar ─────────────────────────────────────────────────── */
+    /* White, not ink: the black CTA pill is already the column's one heavy
+       block, and a white-on---line tile is the system's existing idiom
+       (.hero-check, .surgeon-credential-icon). */
+    .hero-trust {
+      display: flex;
+      align-items: stretch;
+      position: relative;
+      z-index: 2; /* .hero-card is z-index 1 */
+      /* Spans the slab centred, inset by the same amount on both sides as the
+         card's text edge — so the bar's left edge still lines up with the
+         headline and its right edge mirrors it. */
+      width: calc(100% - 2 * var(--hero-inset));
+      margin-top: -42px;
+      margin-inline: auto;
+      padding: 18px 2px;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      /* Clips each cell's hover tint to the rounded corners. */
+      overflow: hidden;
+      /* Hairline ring as an inset shadow rather than a border, matching the
+         mobile card's idiom — it draws the edge without adding a layout box. */
+      box-shadow:
+        inset 0 0 0 1px var(--line),
+        0 2px 6px rgba(38, 35, 31, 0.05),
+        0 16px 40px rgba(38, 35, 31, 0.13);
     }
 
-    .hero-ratings {
+    .hero-trust-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      /* Equal thirds: the dividers land on exact thirds of the bar regardless
+         of how long each platform's label is. */
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0 26px;
+      color: inherit;
+      text-decoration: none;
+      transition: background var(--transition-fast);
+    }
+
+    .hero-trust-item + .hero-trust-item {
+      border-left: 1px solid var(--line);
+    }
+
+    .hero-trust-item:hover {
+      background: var(--cream);
+    }
+
+    /* The global a:focus-visible ring sits outside the element, where this
+       bar's overflow:hidden would clip it — pull it inside and round it to
+       the cell instead of the global --radius-sm. */
+    .hero-trust-item:focus-visible {
+      outline-offset: -3px;
+      border-radius: var(--radius-md);
+    }
+
+    /* Fixed height, not min-height: it keeps the two rows on one baseline
+       across all three cells even though the lockups differ in aspect. */
+    .hero-trust-brand {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-self: stretch;
-      margin-top: 18px;
-      font-size: 12.5px;
+      justify-content: center;
+      gap: 8px;
+      height: 22px;
+    }
+
+    /* Per-brand heights, not one shared value. Equal box heights render very
+       unequal type, because each lockup fills its box differently — measured on
+       the rendered bar, a single 20px height gave wordmarks of 13.0px
+       (Trustpilot, whose box is set by the star), 15.7px (Google) and 20.0px
+       (realself, pure ascender height). These three heights even the wordmarks
+       up, which is what the eye actually compares.
+
+       width:auto overrides the global `img { height: auto }` reset and keeps
+       each derivative's aspect ratio. */
+    .hero-trust-logo {
+      width: auto;
+      height: 20px;
+    }
+
+    /* Mark only, paired with the name in text — a solid circular mark reads
+       larger than type at the same height, so it steps down. */
+    .hero-trust-logo.is-google {
+      height: 17px;
+    }
+
+    .hero-trust-logo.is-trustpilot {
+      height: 23px;
+    }
+
+    .hero-trust-logo.is-realself {
+      height: 17px;
+    }
+
+    .hero-trust-platform {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .hero-trust-meta {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
       line-height: 1.4;
       color: var(--gray-500);
     }
 
-    .hero-ratings-star {
+    .hero-trust-star {
       flex: 0 0 auto;
-      width: 12px;
-      height: 12px;
-      color: var(--champagne-dark);
+      width: 13px;
+      height: 13px;
+      color: var(--champagne);
     }
 
-    .hero-ratings-link {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .hero-ratings-link:hover {
-      text-decoration: underline;
-    }
-
-    .hero-ratings-score {
-      font-weight: 600;
+    .hero-trust-score {
+      font-weight: 700;
       color: var(--ink);
     }
 
+    .hero-trust-item:hover .hero-trust-platform {
+      text-decoration: underline;
+    }
+
+    /* Trustpilot's and RealSelf's names live inside their artwork, so those two
+       cells have no text to underline — lift the logo instead so every cell
+       answers a hover. */
+    .hero-trust-item:hover .hero-trust-logo {
+      transform: translateY(-1px);
+    }
+
+    .hero-trust-logo {
+      transition: transform var(--transition-fast);
+    }
+
     /* No token holds this value; it is only ever this separator. */
-    .hero-ratings-sep {
+    .hero-trust-sep {
       color: #c3b8a6;
     }
   }

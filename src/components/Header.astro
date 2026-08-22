@@ -26,7 +26,9 @@ const { header } = content;
     <nav class="nav" aria-label="Main navigation">
       <ul class="nav-list">
         {header.navLinks.map(link => (
-          <li><a href={link.href} class="nav-link">{link.label}</a></li>
+          <li class:list={[link.mobileOnly && 'nav-item-mobile']}>
+            <a href={link.href} class="nav-link">{link.label}</a>
+          </li>
         ))}
         <li class="nav-cta-item">
           {/* Ghost pill from 1024px up — the hero CTA is the only filled black
@@ -190,6 +192,13 @@ const { header } = content;
        the only edge in the first viewport. */
     .header {
       border-bottom: none;
+    }
+
+    /* Reviews, Procedures and FAQ stay in the slide-in panel only. Hidden on
+       the <li> rather than the <a> so the .nav-list flex gap collapses with
+       them and the four survivors keep an even rhythm. */
+    .nav-item-mobile {
+      display: none;
     }
 
     .logo-img {
